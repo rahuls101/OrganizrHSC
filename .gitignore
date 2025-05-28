@@ -1,0 +1,18 @@
+#python cache files generated automatically
+
+__pycache__/
+*.pyc
+
+#virtual environment folder if i set up one up eventually
+
+venv/
+
+#environment variables (important to keep secret!!!)
+
+.env
+
+#node.js dependencies if i ever end up properly setting up tailwindcss 
+
+node_modules/
+
+

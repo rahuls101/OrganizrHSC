@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - OrganizrHSC</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'wcc-blue': '#1e40af',
+                        'wcc-light-blue': '#3b82f6',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <!-- Navigation Header -->
+    <nav class="bg-white shadow-sm border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <h1 class="text-xl font-bold text-wcc-blue hover:text-blue-700 transition-colors">
+                        OrganizrHSC
+                    </h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href=landing.html class="text-gray-600 hover:text-wcc-blue transition-colors">
+                        Back to Landing
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="flex-1 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-md w-full space-y-8">
+            <!-- Header -->
+            <div class="text-center">
+                <h2 class="text-3xl font-bold text-gray-900 mb-2">
+                    Create Your Account
+                </h2>
+                <p class="text-gray-600">
+                    Join OrganizrHSC and take control of your studies
+                </p>
+            </div>
+
+            <!-- Sign Up Form -->
+            <div class="bg-white py-8 px-6 shadow-lg rounded-lg border border-gray-200">
+                <form class="space-y-6" action="#" method="POST">
+                    <!-- First Name Field -->
+                    <div>
+                        <label for="first-name" class="block text-sm font-medium text-gray-700 mb-2">
+                            First Name
+                        </label>
+                        <input 
+                            id="first-name" 
+                            name="first-name" 
+                            type="text" 
+                            autocomplete="given-name" 
+                            required 
+                            class="w-full px-3 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-wcc-blue focus:border-wcc-blue transition-colors"
+                            placeholder="Enter your first name"
+                        >
+                    </div>
+
+                    <!-- Last Name Field -->
+
+                    <div>
+                        <label for="last-name" class="block text-sm font-medium text-gray-700 mb-2">
+                            Last Name
+                        </label>
+                        <input 
+                            id="last-name" 
+                            name="last-name" 
+                            type="text" 
+                            autocomplete="given-name" 
+                            required 
+                            class="w-full px-3 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-wcc-blue focus:border-wcc-blue transition-colors"
+                            placeholder="Enter your last name"
+                        >
+                    </div>
+
+                    <!-- Email Field -->
+                    <div>
+                        <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
+                            Email Address
+                        </label>
+                        <input 
+                            id="email" 
+                            name="email" 
+                            type="email" 
+                            autocomplete="email" 
+                            required 
+                            class="w-full px-3 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-wcc-blue focus:border-wcc-blue transition-colors"
+                            placeholder="Enter your WCC email"
+                        >
+                        <p class="mt-1 text-xs text-gray-500">
+                            Use your William Clarke College email address
+                        </p>
+                    </div>
+
+                    <!-- Password Field -->
+                    <div>
+                        <label for="password" class="block text-sm font-medium text-gray-700 mb-2">
+                            Password
+                        </label>
+                        <input 
+                            id="password" 
+                            name="password" 
+                            type="password" 
+                            autocomplete="new-password" 
+                            required 
+                            class="w-full px-3 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-wcc-blue focus:border-wcc-blue transition-colors"
+                            placeholder="Create a strong password"
+                        >
+                        <p class="mt-1 text-xs text-gray-500">
+                            Must be at least 8 characters long
+                        </p>
+                    </div>
+
+                    <!-- Confirm Password Field -->
+                    <div>
+                        <label for="confirm-password" class="block text-sm font-medium text-gray-700 mb-2">
+                            Confirm Password
+                        </label>
+                        <input 
+                            id="confirm-password" 
+                            name="confirm-password" 
+                            type="password" 
+                            autocomplete="new-password" 
+                            required 
+                            class="w-full px-3 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-wcc-blue focus:border-wcc-blue transition-colors"
+                            placeholder="Confirm your password"
+                        >
+                    </div>
+
+                    <!-- Terms and Conditions -->
+                    <div class="flex items-start">
+                        <div class="flex items-center h-5">
+                            <input 
+                                id="terms" 
+                                name="terms" 
+                                type="checkbox" 
+                                required
+                                class="h-4 w-4 text-wcc-blue focus:ring-wcc-blue border-gray-300 rounded"
+                            >
+                        </div>
+                        <div class="ml-3 text-sm">
+                            <label for="terms" class="text-gray-700">
+                                I agree to the 
+                                <a href="https://www.youtube.com/watch?v=K55brlAU_ok" target="_blank" class="text-wcc-blue hover:text-blue-700 font-medium transition-colors">
+                                    Terms of Service
+                                </a> 
+                                and 
+                                <a href="https://www.youtube.com/watch?v=K55brlAU_ok" target ="_blank"class="text-wcc-blue hover:text-blue-700 font-medium transition-colors">
+                                    Privacy Policy
+                                </a>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div>
+                        <button 
+                            type="submit" 
+                            class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-wcc-blue hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-wcc-blue transition-colors duration-200 transform hover:-translate-y-0.5"
+                        >
+                            Create Account
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Login Link -->
+            <div class="text-center">
+                <p class="text-sm text-gray-600">
+                    Already have an account?
+                    <a href="login.html" class="font-medium text-wcc-blue hover:text-blue-700 transition-colors">
+                        Log in here
+                    </a>
+                </p>
+            </div>
+
+            <!-- Additional Info -->
+            <div class="text-center">
+                <div class="bg-green-50 border border-green-200 rounded-lg p-4">
+                    <div class="flex items-center justify-center mb-2">
+                        <svg class="w-5 h-5 text-green-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <span class="text-sm font-medium text-green-800">Free for WCC Students</span>
+                    </div>
+                    <p class="text-xs text-green-700">
+                        Get instant access to personalized study planning tools
+                    </p>
+                </div>
+            </div>
+
+            <!-- Security Notice -->
+            <div class="text-center">
+                <div class="bg-blue-50 border border-blue-200 rounded-lg p-3">
+                    <div class="flex items-center justify-center text-xs text-blue-700">
+                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                        </svg>
+                        Your data is encrypted and secure
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center">
+                <h3 class="text-lg font-semibold mb-2">OrganizrHSC</h3>
+                <p class="text-gray-400 mb-4">Empowering William Clarke College students to achieve academic excellence</p>
+                <p class="text-sm text-gray-500">© 2025 OrganizrHSC. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
