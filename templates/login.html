@@ -29,7 +29,7 @@
                     </h1>
                 </div>
                 <div class="flex items-center space-x-4">
-                    <a href="landing.html" class="text-gray-600 hover:text-wcc-blue transition-colors">
+                    <a href="{{ url_for('landing') }}" class="text-gray-600 hover:text-wcc-blue transition-colors">
                         Back to Landing
                     </a>
                 </div>
@@ -99,7 +99,7 @@
                             </label>
                         </div>
                         <div class="text-sm">
-                            <a href="#" class="text-wcc-blue hover:text-blue-700 font-medium transition-colors">
+                            <a href="#" class="text-red-600 hover:text-blue-700 font-medium transition-colors">
                                 Forgot password?
                             </a>
                         </div>
@@ -121,7 +121,7 @@
             <div class="text-center">
                 <p class="text-sm text-gray-600">
                     Don't have an account?
-                    <a href="signup.html" class="font-medium text-wcc-blue hover:text-blue-700 transition-colors">
+                    <a href="{{ url_for('signup') }}" class="font-medium text-wcc-blue hover:text-blue-700 transition-colors">
                         Sign up here
                     </a>
                 </p>

@@ -25,23 +25,23 @@
             <div class="flex justify-between items-center h-16">
                 <!-- Logo -->
                 <div class="flex items-center">
-                    <a href="dashboard.html" class="text-xl font-bold text-wcc-blue">
+                    <a href="{{ url_for('dashboard') }}" class="text-xl font-bold text-wcc-blue">
                         OrganizrHSC
                     </a>
                 </div>
                 
                 <!-- Desktop Navigation -->
                 <div class="hidden md:flex items-center space-x-8">
-                    <a href="dashboard.html" class="text-wcc-blue font-medium border-b-2 border-wcc-blue pb-4">
+                    <a href="{{ url_for('dashboard') }}" class="text-wcc-blue font-medium border-b-2 border-wcc-blue pb-4">
                         Dashboard
                     </a>
-                    <a href="upload.html" class="text-gray-600 hover:text-wcc-blue transition-colors">
+                    <a href="{{ url_for('upload') }}" class="text-gray-600 hover:text-wcc-blue transition-colors">
                         Upload
                     </a>
-                    <a href="schedule.html" class="text-gray-600 hover:text-wcc-blue transition-colors">
+                    <a href="{{ url_for('schedule') }}" class="text-gray-600 hover:text-wcc-blue transition-colors">
                         Schedule
                     </a>
-                    <a href="login.html" class="text-gray-600 hover:text-red-600 transition-colors">
+                    <a href="#" class="text-red-600 hover:text-red-600 transition-colors">
                         Logout
                     </a>
                 </div>
@@ -68,7 +68,7 @@
 
         <!-- Quick Actions -->
         <div class="grid md:grid-cols-2 gap-4 mb-8">
-            <a href="upload.html" class="bg-wcc-blue hover:bg-blue-700 text-white p-6 rounded-lg shadow-lg transition-all duration-200 transform hover:-translate-y-1 hover:shadow-xl">
+            <a href="{{ url_for('upload') }}" class="bg-wcc-blue hover:bg-blue-700 text-white p-6 rounded-lg shadow-lg transition-all duration-200 transform hover:-translate-y-1 hover:shadow-xl">
                 <div class="flex items-center">
                     <svg class="w-8 h-8 mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
@@ -80,7 +80,7 @@
                 </div>
             </a>
             
-            <a href="schedule.html" class="bg-green-600 hover:bg-green-700 text-white p-6 rounded-lg shadow-lg transition-all duration-200 transform hover:-translate-y-1 hover:shadow-xl">
+            <a href="{{ url_for('schedule') }}" class="bg-green-600 hover:bg-green-700 text-white p-6 rounded-lg shadow-lg transition-all duration-200 transform hover:-translate-y-1 hover:shadow-xl">
                 <div class="flex items-center">
                     <svg class="w-8 h-8 mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
@@ -241,7 +241,7 @@
 
             <!-- View All Link -->
             <div class="px-6 py-4 bg-gray-50 border-t border-gray-200">
-                <a href="schedule.html" class="text-wcc-blue hover:text-blue-700 font-medium text-sm transition-colors">
+                <a href="{{ url_for('schedule') }}" class="text-wcc-blue hover:text-blue-700 font-medium text-sm transition-colors">
                     View all assessments →
                 </a>
             </div>

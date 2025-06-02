@@ -29,7 +29,7 @@
                     </h1>
                 </div>
                 <div class="flex items-center space-x-4">
-                    <a href=landing.html class="text-gray-600 hover:text-wcc-blue transition-colors">
+                    <a href="{{ url_for('landing') }}" class="text-gray-600 hover:text-wcc-blue transition-colors">
                         Back to Landing
                     </a>
                 </div>
@@ -154,11 +154,11 @@
                         <div class="ml-3 text-sm">
                             <label for="terms" class="text-gray-700">
                                 I agree to the 
-                                <a href="https://www.youtube.com/watch?v=K55brlAU_ok" target="_blank" class="text-wcc-blue hover:text-blue-700 font-medium transition-colors">
+                                <a href="#" target="_blank" class="text-red-600 hover:text-blue-700 font-medium transition-colors">
                                     Terms of Service
                                 </a> 
                                 and 
-                                <a href="https://www.youtube.com/watch?v=K55brlAU_ok" target ="_blank"class="text-wcc-blue hover:text-blue-700 font-medium transition-colors">
+                                <a href="#" target ="_blank"class="text-red-600 hover:text-blue-700 font-medium transition-colors">
                                     Privacy Policy
                                 </a>
                             </label>
@@ -181,7 +181,7 @@
             <div class="text-center">
                 <p class="text-sm text-gray-600">
                     Already have an account?
-                    <a href="login.html" class="font-medium text-wcc-blue hover:text-blue-700 transition-colors">
+                    <a href="{{ url_for('login') }}" class="font-medium text-wcc-blue hover:text-blue-700 transition-colors">
                         Log in here
                     </a>
                 </p>
