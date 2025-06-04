@@ -1,0 +1,94 @@
+from flask import Flask, render_template, request, redirect, url_for, flash, session
+from dotenv import load_dotenv
+from models import db, User
+from auth import validate_user_signup, validate_user_login, create_user
+import os 
+
+load_dotenv() 
+
+app = Flask(__name__)
+app.secret_key = os.getenv("SECRET_KEY", "defaultsecretkey")
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
+db.init_app(app)
+
+@app.route('/')
+def landing():
+    return render_template('landing.html')
+
+@app.route('/login', methods=['GET','POST'])
+def login():
+    if request.method == 'POST':
+        email = request.form.get('email')
+        password = request.form.get('password')
+
+        user = validate_user_login(email, password)
+
+        if user: 
+            session['user_id'] = user.id 
+            flash('Logged in successfully')
+            return redirect(url_for('dashboard'))
+        
+        else: 
+            flash('Invalid email or password.')
+            return redirect(url_for('login'))
+    
+    else: 
+        return render_template('login.html')
+
+@app.route('/signup', methods=['GET', 'POST'])
+def signup():
+    if request.method == 'POST': 
+        firstname = request.form.get('first-name')
+        lastname = request.form.get('last-name')
+        email = request.form.get('email')
+        email = email.lower() #capitilisation doesnt matter in emails
+        password = request.form.get('password')
+        confirmpassword = request.form.get('confirm-password')
+        terms = request.form.get('terms')
+
+        valid, message = validate_user_signup(firstname, lastname, email, password, confirmpassword, terms)
+        if valid:
+            create_user(firstname, lastname, email, password)
+            flash('Account created successfully. Please log in.')
+            return redirect(url_for('login'))
+        else: 
+            flash(message)
+            return redirect(url_for('signup'))
+    else: 
+        return render_template('signup.html')
+    
+@app.route('/logout')
+def logout(): 
+    session.pop('user_id', None)
+    flash('Logged out.')
+    return redirect(url_for('landing'))
+
+@app.route('/dashboard')
+def dashboard():
+    if 'user_id' not in session: 
+        flash('Please log in to access the dashboard.')
+        return redirect(url_for('login'))
+    
+    user = User.query.get(session['user_id'])
+    return render_template('dashboard.html', user=user)
+
+@app.route('/upload')
+def upload():
+    if 'user_id' not in session: 
+        flash('Please log in to access the upload page.')
+        return redirect(url_for('login'))
+    
+    user = User.query.get(session['user_id'])
+    return render_template('upload.html', user=user)
+
+@app.route('/schedule')
+def schedule():
+    if 'user_id' not in session: 
+        flash('Please log in to access the schedule page.')
+        return redirect(url_for('login'))
+    
+    user = User.query.get(session['user_id'])
+    return render_template('schedule.html')
+
+if __name__ == '__main__': 
+    app.run(debug=True)

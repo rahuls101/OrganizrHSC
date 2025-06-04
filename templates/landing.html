@@ -19,6 +19,19 @@
     </script>
 </head>
 <body class="bg-gray-50 min-h-screen">
+
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <div class="max-w-4xl mx-auto py-4">
+        {% for message in messages %}
+            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4 shadow-sm">
+            {{ message }}
+            </div>
+        {% endfor %}
+        </div>
+    {% endif %}
+    {% endwith %}
+
     <!-- Navigation Header -->
     <nav class="bg-white shadow-sm border-b border-gray-200">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -145,14 +158,6 @@
             </div>
         </div>
 
-
-        <div class="bg-white py-16">
-            <div class="text-center">
-            <a href="{{ url_for('dashboard') }}" class="text-blue-500 underline">Test Dashboard</a>
-            <a href="{{ url_for('upload') }}" class="ml-4 text-blue-500 underline">Test Upload</a>
-            <a href="{{ url_for('schedule') }}" class="ml-4 text-blue-500 underline">Test Schedule</a>
-            </div>
-        </div>
     </main>
 
     <!-- Footer -->
