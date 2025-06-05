@@ -4,25 +4,20 @@ from flask import flash, redirect, url_for
 import re
 
 def validate_user_signup(fname, lname, email, pword, cpword, terms):
-    msg = ''
 
-    # First name criteria: more than 1 and less than 25 alphanumeric characters
+    # First name criteria: less than 25 alphanumeric characters
     
-    if len(fname) < 2 or len(fname) > 25:
-        msg = 'Invalid first name.'
-        return False, msg
+    if len(fname) < 1 or len(fname) > 25:
+        return False
     elif not fname.isalnum():
-        msg = 'Invalid first name.'
-        return False, msg
+        return False
     
-    # Last name criteria: more than 1 and less than 25 alphanumeric characters
+    # Last name criteria: less than 25 alphanumeric characters
 
-    if len(lname) < 2 or len(lname) > 25:
-        msg = 'Invalid last name.'
-        return False, msg
+    if len(lname) < 1 or len(lname) > 25:
+        return False
     elif not lname.isalnum():
-        msg = 'Invalid last name.'
-        return False, msg
+        return False
     
     # Email criteria: Must be a valid email, not in use
 
@@ -30,43 +25,35 @@ def validate_user_signup(fname, lname, email, pword, cpword, terms):
     if re.match(pattern, email):
         pass
     else:
-        msg = 'Invalid email address.'
-        return False, msg
+        return False
     
     existing_user = User.query.filter_by(email=email).first()
     if existing_user: 
-        msg = 'User already exists.'
-        return False, msg
+        return False
     
     # Password criteria: at least 8 characters, One uppercase, one lowercase, one number, match the confirmpassword
 
     if len(pword) < 8:
-        msg = 'Invalid password.'
-        return False, msg
+        return False
     elif not re.search(r'[A-Z]', pword):
-        msg = 'Invalid password.'
-        return False, msg
+        return False
 
     elif not re.search(r'[a-z]', pword):
-        msg = 'Invalid password.'
-        return False, msg
+        return False
     
     elif not re.search(r'\d', pword):  
-        msg = 'Invalid password.'
-        return False, msg
+        return False
     
     if pword != cpword: 
-        msg = 'Passwords do not match.'
-        return False, msg
+        return False
     
 
     # make sure the terms and conditions checkbox is checked 
 
     if not terms: 
-        msg = 'Please accept the terms and conditions.'
-        return False, msg
+        return False
 
-    return True, msg
+    return True
 
 
 def validate_user_login(email, password): 

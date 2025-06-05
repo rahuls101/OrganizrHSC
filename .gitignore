@@ -15,4 +15,8 @@ venv/
 
 node_modules/
 
+#dont upload the database!
+instance/
+*.db 
+create_db.py
 

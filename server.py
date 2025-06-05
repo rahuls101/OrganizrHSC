@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, session
+from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify
 from dotenv import load_dotenv
 from models import db, User
 from auth import validate_user_signup, validate_user_login, create_user
@@ -29,7 +29,6 @@ def login():
             return redirect(url_for('dashboard'))
         
         else: 
-            flash('Invalid email or password.')
             return redirect(url_for('login'))
     
     else: 
@@ -46,13 +45,12 @@ def signup():
         confirmpassword = request.form.get('confirm-password')
         terms = request.form.get('terms')
 
-        valid, message = validate_user_signup(firstname, lastname, email, password, confirmpassword, terms)
+        valid = validate_user_signup(firstname, lastname, email, password, confirmpassword, terms)
         if valid:
             create_user(firstname, lastname, email, password)
             flash('Account created successfully. Please log in.')
             return redirect(url_for('login'))
         else: 
-            flash(message)
             return redirect(url_for('signup'))
     else: 
         return render_template('signup.html')
@@ -60,7 +58,7 @@ def signup():
 @app.route('/logout')
 def logout(): 
     session.pop('user_id', None)
-    flash('Logged out.')
+    flash('Logged out successfully.')
     return redirect(url_for('landing'))
 
 @app.route('/dashboard')
@@ -89,6 +87,14 @@ def schedule():
     
     user = User.query.get(session['user_id'])
     return render_template('schedule.html')
+
+
+@app.route('/check_email', methods=['POST'])
+def check_email():
+    email = request.json.get('email')
+    exists = User.query.filter_by(email=email).first() is not None
+    return jsonify({'exists': exists})
+
 
 if __name__ == '__main__': 
     app.run(debug=True)
