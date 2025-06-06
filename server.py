@@ -25,11 +25,10 @@ def login():
 
         if user: 
             session['user_id'] = user.id 
-            flash('Logged in successfully')
-            return redirect(url_for('dashboard'))
-        
+            return redirect(url_for('dashboard', message='Logged in succesfully!', type='success'))
+
         else: 
-            return redirect(url_for('login'))
+            return redirect(url_for('login', message='Invalid email or password', type='error'))
     
     else: 
         return render_template('login.html')
@@ -48,33 +47,31 @@ def signup():
         valid = validate_user_signup(firstname, lastname, email, password, confirmpassword, terms)
         if valid:
             create_user(firstname, lastname, email, password)
-            flash('Account created successfully. Please log in.')
-            return redirect(url_for('login'))
+            return redirect(url_for('login', message='Account created successfully, please log in', type='success'))
         else: 
-            return redirect(url_for('signup'))
-    else: 
+            return redirect(url_for('signup', message='Signup failed. Please try again.', type='error'))
+    else:   
         return render_template('signup.html')
     
 @app.route('/logout')
 def logout(): 
     session.pop('user_id', None)
-    flash('Logged out successfully.')
-    return redirect(url_for('landing'))
+    return redirect(url_for('landing', message='Logged out successfully', type='success'))
+
 
 @app.route('/dashboard')
 def dashboard():
     if 'user_id' not in session: 
-        flash('Please log in to access the dashboard.')
-        return redirect(url_for('login'))
-    
+        return redirect(url_for('login', message='Please log in to continue', type='error'))
+
+
     user = User.query.get(session['user_id'])
     return render_template('dashboard.html', user=user)
 
 @app.route('/upload')
 def upload():
     if 'user_id' not in session: 
-        flash('Please log in to access the upload page.')
-        return redirect(url_for('login'))
+        return redirect(url_for('login', message='Please log in to continue', type='error'))
     
     user = User.query.get(session['user_id'])
     return render_template('upload.html', user=user)
@@ -82,8 +79,7 @@ def upload():
 @app.route('/schedule')
 def schedule():
     if 'user_id' not in session: 
-        flash('Please log in to access the schedule page.')
-        return redirect(url_for('login'))
+        return redirect(url_for('login', message='Please log in to continue', type='error'))
     
     user = User.query.get(session['user_id'])
     return render_template('schedule.html')

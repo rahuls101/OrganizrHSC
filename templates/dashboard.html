@@ -20,17 +20,11 @@
 </head>
 <body class="bg-gray-50 min-h-screen">
 
-    {% with messages = get_flashed_messages() %}
-    {% if messages %}
-        <div class="max-w-4xl mx-auto py-4">
-        {% for message in messages %}
-            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4 shadow-sm">
-            {{ message }}
-            </div>
-        {% endfor %}
-        </div>
-    {% endif %}
-    {% endwith %}
+    <!-- Toast notification -->
+    <div id="toast-message"
+        class="hidden fixed top-5 left-1/2 transform -translate-x-1/2 z-50 max-w-md w-full px-6 py-4 rounded-xl shadow-lg border text-center transition-opacity duration-500">
+        <span id="toast-text" class="text-base font-semibold block"></span>
+    </div>
 
     <!-- Navigation Header -->
     <nav class="bg-white shadow-sm border-b border-gray-200">
@@ -303,5 +297,11 @@
             </div>
         </div>
     </footer>
+
+
+<!-- Toast/notification script -->
+<script src="{{ url_for('static', filename='js/toast.js') }}"></script>
+
+
 </body>
 </html>
