@@ -11,7 +11,7 @@ OrganizrHSC is a smart, Flask-based web application designed to help high school
 - [✨ Features](#-features)
 - [📸 Screenshots](#-screenshots)
 - [⚙️ Tech Stack](#️-tech-stack)
-- [⚙️ Prerequisites](#️-prerequisites)
+- [📋 Prerequisites](#️-prerequisites)
 
 
 
@@ -70,7 +70,7 @@ OrganizrHSC is a smart, Flask-based web application designed to help high school
 
 ---
 
-### Prerequisites
+## 📋 Prerequisites
 
 Make sure you have the following installed:
 

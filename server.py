@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify
+from markupsafe import escape
 from dotenv import load_dotenv
 from models import db, User
 from auth import validate_user_signup, validate_user_login, create_user
@@ -18,7 +19,7 @@ def landing():
 @app.route('/login', methods=['GET','POST'])
 def login():
     if request.method == 'POST':
-        email = request.form.get('email')
+        email = escape(request.form.get('email'))
         password = request.form.get('password')
 
         user = validate_user_login(email, password)
@@ -36,11 +37,12 @@ def login():
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
     if request.method == 'POST': 
-        firstname = request.form.get('first-name')
-        lastname = request.form.get('last-name')
-        email = request.form.get('email')
-        email = email.lower() #capitilisation doesnt matter in emails
-        password = request.form.get('password')
+        # Escape user input to prevent XSS attacks 
+
+        firstname = escape(request.form.get('first-name'))
+        lastname = escape(request.form.get('last-name'))
+        email = escape(request.form.get('email')).lower()
+        password = request.form.get('password') #passwords are not rendered into HTML, therefore not an XSS vector
         confirmpassword = request.form.get('confirm-password')
         terms = request.form.get('terms')
 
