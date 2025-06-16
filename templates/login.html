@@ -19,6 +19,13 @@
     </script>
 </head>
 <body class="bg-gray-50 min-h-screen flex flex-col">
+
+    <!-- Toast notification -->
+    <div id="toast-message"
+        class="hidden fixed top-5 left-1/2 transform -translate-x-1/2 z-50 max-w-md w-full px-6 py-4 rounded-xl shadow-lg border text-center transition-opacity duration-500">
+        <span id="toast-text" class="text-base font-semibold block"></span>
+    </div>
+
     <!-- Navigation Header -->
     <nav class="bg-white shadow-sm border-b border-gray-200">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -154,5 +161,9 @@
             </div>
         </div>
     </footer>
+
+<!-- Toast notification script -->
+<script src="{{ url_for('static', filename='js/toast.js') }}"></script>
+
 </body>
 </html>
