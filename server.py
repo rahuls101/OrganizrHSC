@@ -4,6 +4,7 @@ from dotenv import load_dotenv
 from models import db, User
 from auth import validate_user_signup, validate_user_login, create_user
 import os 
+from datetime import datetime, timezone
 
 load_dotenv() 
 
@@ -66,9 +67,32 @@ def dashboard():
     if 'user_id' not in session: 
         return redirect(url_for('login', message='Please log in to continue', type='error'))
 
-
     user = User.query.get(session['user_id'])
-    return render_template('dashboard.html', user=user)
+
+
+    now = datetime.now()
+
+    #retrieve upcoming assessments 
+
+    assessments = [a for a in user.assessments if a.due_date >= now] 
+
+    #sort assessments by due date
+
+    sorted_assessments = sorted(assessments, key=lambda a: a.due_date)
+
+    #list of assessments that are due within the next week (within 7 days): 
+
+    upcoming_this_week = [a for a in sorted_assessments if 0 <= (a.due_date - now).days <= 7]
+
+
+    return render_template(
+        'dashboard.html',
+        user=user, 
+        now = now,
+        num_assessments=len(assessments), 
+        num_close_assessments=len(upcoming_this_week), 
+        next_five_assessments = sorted_assessments[:5]
+    )
 
 @app.route('/upload')
 def upload():
