@@ -89,9 +89,8 @@ def dashboard():
         'dashboard.html',
         user=user, 
         now = now,
-        num_assessments=len(assessments), 
+        sorted_assessments = sorted_assessments,
         num_close_assessments=len(upcoming_this_week), 
-        next_five_assessments = sorted_assessments[:5]
     )
 
 @app.route('/upload')
