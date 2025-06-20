@@ -27,39 +27,36 @@
     </div>
 
     <!-- Navigation Header -->
-    <nav class="bg-white shadow-sm border-b border-gray-200">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-16">
-                <!-- Logo -->
+    <nav class="bg-white border-b border-gray-200 shadow-sm">
+        <div class="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
                 <div class="flex items-center">
-                    <a href="{{ url_for('dashboard') }}" class="text-xl font-bold text-wcc-blue">
-                        OrganizrHSC
-                    </a>
-                </div>
-                
-                <!-- Desktop Navigation -->
-                <div class="hidden md:flex items-center space-x-8">
-                    <a href="{{ url_for('dashboard') }}" class="text-wcc-blue font-medium border-b-2 border-wcc-blue pb-4">
-                        Dashboard
-                    </a>
-                    <a href="{{ url_for('upload') }}" class="text-gray-600 hover:text-wcc-blue transition-colors">
-                        Upload
-                    </a>
-                    <a href="{{ url_for('schedule') }}" class="text-gray-600 hover:text-wcc-blue transition-colors">
-                        Schedule
-                    </a>
-                    <a href="{{ url_for('logout') }}" class="text-red-600 hover:text-red-600 transition-colors">
-                        Logout
-                    </a>
+                    <h1 class="text-xl font-bold text-wcc-blue">OrganizrHSC</h1>
                 </div>
 
-                <!-- Mobile menu button -->
-                <div class="md:hidden">
-                    <button class="text-gray-600 hover:text-wcc-blue">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-                        </svg>
-                    </button>
+                <div class="hidden space-x-2 md:flex items-center">
+
+                    <a 
+                        href="{{ url_for('dashboard') }}" 
+                        aria-current="page"
+                        class="px-4 py-2 text-white font-bold rounded-lg bg-gradient-to-r from-wcc-blue to-blue-600 shadow-md border border-blue-500 cursor-default pointer-events-none">
+                        <span class="relative z-10">Dashboard</span>
+                    </a>
+
+                    <a href="{{ url_for('upload') }}" class="px-4 py-2 text-wcc-blue font-semibold rounded-lg transition-all duration-200 hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 hover:shadow-md transform hover:-translate-y-0.5 relative overflow-hidden group">
+                        <span class="relative z-10">Upload</span>
+                        <div class="absolute inset-0 bg-gradient-to-r from-wcc-blue to-blue-600 opacity-0 group-hover:opacity-10 transition-opacity duration-200"></div>
+                    </a>
+
+                    <a href="{{ url_for('schedule') }}" class="px-4 py-2 text-wcc-blue font-semibold rounded-lg transition-all duration-200 hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 hover:shadow-md transform hover:-translate-y-0.5 relative overflow-hidden group">
+                        <span class="relative z-10">Schedule</span>
+                        <div class="absolute inset-0 bg-gradient-to-r from-wcc-blue to-blue-600 opacity-0 group-hover:opacity-10 transition-opacity duration-200"></div>
+                    </a>
+
+                    <div class="w-px h-6 bg-gray-300 mx-2"></div>
+
+                    <a href="{{ url_for('logout') }}" class="px-4 py-2 font-semibold text-red-600 bg-red-100 border-2 border-red-200 rounded-lg transition-colors duration-200 shadow-md hover:bg-gray-50 hover:shadow-lg transform hover:-translate-y-0.5">Logout</a>
+
                 </div>
             </div>
         </div>
@@ -293,7 +290,7 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center">
                 <h3 class="text-lg font-semibold mb-2">OrganizrHSC</h3>
-                <p class="text-gray-400 mb-4">Empowering William Clarke College students to achieve academic excellence</p>
+                <p class="text-gray-400 mb-4">Empowering HSC students to achieve academic excellence</p>
                 <p class="text-sm text-gray-500">© 2025 OrganizrHSC. All rights reserved.</p>
             </div>
         </div>

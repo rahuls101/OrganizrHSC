@@ -33,12 +33,19 @@
                 <div class="flex items-center">
                     <h1 class="text-xl font-bold text-wcc-blue">OrganizrHSC</h1>
                 </div>
-                <div class="hidden space-x-4 md:flex">
-                    <a href="#" class="text-red-600 transition-colors hover:text-wcc-blue">About</a>
-                    <a href="#" class="text-red-600 transition-colors hover:text-wcc-blue">Features</a>
-                    <a href="#" class="text-red-600 transition-colors hover:text-wcc-blue">Contact</a>
+                <div class="hidden space-x-2 md:flex items-center">
+                    <a href="#" class="px-4 py-2 text-wcc-blue font-semibold rounded-lg transition-all duration-200 hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 hover:shadow-md transform hover:-translate-y-0.5 relative overflow-hidden group">
+                        <span class="relative z-10">About</span>
+                        <div class="absolute inset-0 bg-gradient-to-r from-wcc-blue to-blue-600 opacity-0 group-hover:opacity-10 transition-opacity duration-200"></div>
+                    </a>
+                    
+                    <a href="#" class="px-4 py-2 text-wcc-blue font-semibold rounded-lg transition-all duration-200 hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 hover:shadow-md transform hover:-translate-y-0.5 relative overflow-hidden group">
+                        <span class="relative z-10">Contact</span>
+                        <div class="absolute inset-0 bg-gradient-to-r from-wcc-blue to-blue-600 opacity-0 group-hover:opacity-10 transition-opacity duration-200"></div>
+                    </a>
+                    <div class="w-px h-6 bg-gray-300 mx-2"></div>
 
-                    <a href="{{ url_for('login') }}"  class="px-4 py-2 font-semibold text-wcc-blue bg-white border-2 border-wcc-blue rounded-lg transition-colors duration-200 shadow-md hover:bg-gray-50 hover:shadow-lg transform hover:-translate-y-0.5">Login</a>
+                    <a href="{{ url_for('login') }}" class="px-4 py-2 font-semibold text-wcc-blue bg-white border-2 border-wcc-blue rounded-lg transition-colors duration-200 shadow-md hover:bg-gray-50 hover:shadow-lg transform hover:-translate-y-0.5">Login</a>
                     <a href="{{ url_for('signup') }}" class="px-4 py-2 font-semibold text-white bg-wcc-blue border-2 border-wcc-blue rounded-lg transition-colors duration-200 shadow-md hover:bg-blue-700 hover:shadow-lg transform hover:-translate-y-0.5">Sign Up</a>
                 </div>
             </div>
@@ -159,7 +166,7 @@
         <div class="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
             <div class="text-center">
                 <h3 class="mb-2 text-lg font-semibold">OrganizrHSC</h3>
-                <p class="mb-4 text-gray-400">Empowering William Clarke College students to achieve academic excellence</p>
+                <p class="mb-4 text-gray-400">Empowering HSC students to achieve academic excellence</p>
                 <p class="text-sm text-gray-500">© 2025 OrganizrHSC. All rights reserved.</p>
             </div>
         </div>
