@@ -20,15 +20,17 @@
 </head>
 <body class="bg-gray-50 min-h-screen">
 
-    <!-- Navigation Header -->
-    <nav class="bg-white border-b border-gray-200 shadow-sm">
-        <div class="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-16">
-                <div class="flex items-center">
-                    <h1 class="text-xl font-bold text-wcc-blue">OrganizrHSC</h1>
-                </div>
-                <div class="hidden space-x-2 md:flex items-center">
+    <!-- Navbar -->
+    <nav class="bg-white border-gray-200 border-b shadow-sm px-4 lg:px-6 py-2.5">
+        <div class="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl">
+            
+            <h1 class="flex items-center">
+                <span class="text-xl font-bold text-wcc-blue">OrganizrHSC</span>
+            </h1>
 
+            <div class="justify-between items-center w-full lg:flex lg:w-auto lg:order-1">
+                <div class="flex flex-col mt-4 font-medium lg:flex-row lg:space-x-8 lg:mt-0">
+                    
                     <a href="{{ url_for('dashboard') }}" class="px-4 py-2 text-wcc-blue font-semibold rounded-lg transition-all duration-200 hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 hover:shadow-md transform hover:-translate-y-0.5 relative overflow-hidden group">
                         <span class="relative z-10">Dashboard</span>
                         <div class="absolute inset-0 bg-gradient-to-r from-wcc-blue to-blue-600 opacity-0 group-hover:opacity-10 transition-opacity duration-200"></div>
@@ -40,19 +42,23 @@
                         class="px-4 py-2 text-white font-bold rounded-lg bg-gradient-to-r from-wcc-blue to-blue-600 shadow-md border border-blue-500 cursor-default pointer-events-none">
                         <span class="relative z-10">Upload</span>
                     </a>
-
+                    
                     <a href="{{ url_for('schedule') }}" class="px-4 py-2 text-wcc-blue font-semibold rounded-lg transition-all duration-200 hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 hover:shadow-md transform hover:-translate-y-0.5 relative overflow-hidden group">
                         <span class="relative z-10">Schedule</span>
                         <div class="absolute inset-0 bg-gradient-to-r from-wcc-blue to-blue-600 opacity-0 group-hover:opacity-10 transition-opacity duration-200"></div>
                     </a>
-
-                    <div class="w-px h-6 bg-gray-300 mx-2"></div>
-
-                    <a href="{{ url_for('logout') }}" class="px-4 py-2 font-semibold text-red-600 bg-red-100 border-2 border-red-200 rounded-lg transition-colors duration-200 shadow-md hover:bg-gray-50 hover:shadow-lg transform hover:-translate-y-0.5">Logout</a>
+                    
                 </div>
             </div>
+
+            <div class="flex items-center lg:order-2">
+                <a 
+                    href="{{ url_for('logout') }}" class="px-4 py-2 font-semibold text-red-600 bg-red-100 border-2 border-red-200 rounded-lg transition-colors duration-200 shadow-md hover:bg-gray-50 hover:shadow-lg transform hover:-translate-y-0.5">Log out
+                </a>
+
+            </div>
         </div>
-    </nav>
+    </nav>~
 
     <!-- Main Content -->
     <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
