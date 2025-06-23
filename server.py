@@ -1,7 +1,8 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify
 from markupsafe import escape
 from dotenv import load_dotenv
-from models import db, User
+from models import db, User, Assessment
+import fitz
 from auth import validate_user_signup, validate_user_login, create_user
 import os 
 from datetime import datetime, timezone
@@ -12,6 +13,58 @@ app = Flask(__name__)
 app.secret_key = os.getenv("SECRET_KEY", "defaultsecretkey")
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 db.init_app(app)
+
+
+# make utility functions for parsing pdfs
+
+def allowed_file(filename): 
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in {'pdf'}
+
+def extract_subject_code(pdf): 
+    subject_map = {
+        "English": "ENG",
+        "Mathematics": "MAT",
+        "Physics": "PHY",
+        # Add every HSC subject later
+    }
+    text = pdf.get_text()
+    for subjectname, code in subject_map.items():
+        if subjectname in text:
+            return code
+    return "GEN"
+
+
+def extract_due_date(pdf): 
+    # search for the keyword which is 'due date'
+    text_instances = pdf.search_for('Due Date')
+
+    for inst in text_instances:
+        # expand the rectangle to the right to capture the value next to it
+        extended_rect = fitz.Rect(inst.x1, inst.y0, inst.x1 + 200, inst.y1)  # adjust width as needed
+        date = pdf.get_text("text", clip=extended_rect).strip()
+        return date
+    
+def parse_date(date_str): 
+    try: 
+        return datetime.strptime(date_str, "%A, %d %B %Y")
+    except ValueError: 
+        return None
+
+def extract_title(pdf): 
+    # search for the keyword which is 'due date'
+    text_instances = pdf.search_for('Task title')
+
+    for inst in text_instances:
+        # expand the rectangle to the right to capture the value next to it
+        extended_rect = fitz.Rect(inst.x1, inst.y0, inst.x1 + 200, inst.y1)  # adjust width as needed
+        title = pdf.get_text("text", clip=extended_rect).strip()
+        return title
+
+def extract_description(pdf): 
+    return 'Placeholder description'
+
+
+
 
 @app.route('/')
 def landing():
@@ -115,6 +168,7 @@ def check_email():
     email = request.json.get('email')
     exists = User.query.filter_by(email=email).first() is not None
     return jsonify({'exists': exists})
+
 
 
 if __name__ == '__main__': 
