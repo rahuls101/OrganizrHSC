@@ -1,9 +1,10 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify
+from werkzeug.utils import secure_filename
 from markupsafe import escape
 from dotenv import load_dotenv
 from models import db, User, Assessment
 import fitz
-from auth import validate_user_signup, validate_user_login, create_user
+from auth import validate_user_signup, validate_user_login, create_user, allowed_file
 import os 
 from datetime import datetime, timezone
 
@@ -12,13 +13,20 @@ load_dotenv()
 app = Flask(__name__)
 app.secret_key = os.getenv("SECRET_KEY", "defaultsecretkey")
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
+
+
+UPLOAD_FOLDER = os.path.join(os.getcwd(), 'uploads')
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+if not os.path.exists(UPLOAD_FOLDER): 
+    os.makedirs(UPLOAD_FOLDER)
+
+
 db.init_app(app)
 
 
 # make utility functions for parsing pdfs
 
-def allowed_file(filename): 
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in {'pdf'}
 
 def extract_subject_code(pdf): 
     subject_map = {
@@ -146,12 +154,61 @@ def dashboard():
         num_close_assessments=len(upcoming_this_week), 
     )
 
-@app.route('/upload')
+@app.route('/upload', methods=['GET', 'POST'])
 def upload():
-    if 'user_id' not in session: 
+    if 'user_id' not in session:
         return redirect(url_for('login', message='Please log in to continue', type='error'))
-    
+
     user = User.query.get(session['user_id'])
+
+    if request.method == 'POST':
+        files = request.files.getlist('files')
+        results = []
+
+        if not files:
+            return jsonify({'error': 'No files provided'}), 400
+
+        for file in files:
+            if not file or not allowed_file(file.filename):
+                results.append({
+                    'filename': file.filename if file else 'unknown',
+                    'error': 'Invalid file type'
+                })
+                continue
+
+            filename = secure_filename(file.filename)
+            filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            file.save(filepath)
+
+            try:
+                doc = fitz.open(filepath)
+                page = doc[0]
+
+                subject_code = extract_subject_code(page)
+                title = extract_title(page)
+                due_date_raw = extract_due_date(page)
+                due_date = parse_date(due_date_raw)
+                description = extract_description(page)
+
+                doc.close()
+                os.remove(filepath)
+
+                results.append({
+                    'filename': filename,
+                    'subject_code': subject_code,
+                    'title': title,
+                    'description': description,
+                    'due_date': due_date.isoformat() if due_date else None
+                })
+
+            except Exception as e:
+                results.append({
+                    'filename': filename,
+                    'error': str(e)
+                })
+
+        return jsonify({'results': results})
+
     return render_template('upload.html', user=user)
 
 @app.route('/schedule')

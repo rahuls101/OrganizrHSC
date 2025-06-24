@@ -20,4 +20,4 @@ class Assessment(db.Model):
     title = db.Column(db.String(100), nullable = False)
     description = db.Column(db.Text, nullable = True)
     due_date = db.Column(db.DateTime, nullable = False)
-    created_at = db.Column(db.DateTime, default=datetime.now)
+
