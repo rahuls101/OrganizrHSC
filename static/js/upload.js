@@ -2,6 +2,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const fileInput = document.getElementById('file-upload');
     const previewContainer = document.querySelector('#file-preview-container');
     let selectedFiles = [];
+    let processedResults = [];
 
     fileInput.addEventListener('change', function () {
         
@@ -100,6 +101,46 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
 
+    const createBtn = document.getElementById('create-assessments-btn'); 
+    const successBanner = document.getElementById('upload-success-banner'); 
+    const errorBanner = document.getElementById('upload-error-banner'); 
+
+    createBtn.addEventListener('click', () => {
+        if (processedResults.length === 0) {
+            showBanner(errorBanner);
+            return;
+        }
+
+        fetch('/commit-assessments', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ assessments: processedResults })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                showBanner(successBanner);
+            } else {
+                showBanner(errorBanner);
+            }
+        })
+        .catch(() => {
+            showBanner(errorBanner);
+        });
+    });
+
+    function showBanner(bannerElement) {
+        [successBanner, errorBanner].forEach(b => b.classList.add('hidden'));
+        bannerElement.classList.remove('hidden');
+        setTimeout(() => {
+            bannerElement.classList.add('hidden');
+        }, 6000);
+    }
+
+
+
     function updateStatus(previewElement, status) {
         const badge = previewElement.querySelector('.status-pill');
         const text = badge.querySelector('.status-text');
@@ -150,6 +191,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const result = data.results?.find(r => r.original_filename === file.name);
             if (result && !result.error) {
                 updateStatus(previewElement, 'success');
+                processedResults.push(result);
             } else {
                 updateStatus(previewElement, 'error');
             }
