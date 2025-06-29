@@ -58,7 +58,7 @@
 
             </div>
         </div>
-    </nav>~
+    </nav>
 
     <!-- Main Content -->
     <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -120,7 +120,7 @@
 
             <!-- Action Buttons -->
             <div class="mt-8 flex flex-col sm:flex-row gap-4">
-                <button id="create-assessments-btn" class="bg-wcc-blue hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-lg transition-colors duration-200 flex items-center justify-center">
+                <button id="create-assessments-btn" class="bg-gray-300 text-white font-medium py-3 px-6 rounded-lg transition-colors duration-200 flex items-center justify-center cursor-not-allowed" disabled>
                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
                     </svg>
@@ -140,7 +140,7 @@
                 </svg>
                 <div>
                     <h4 class="text-sm font-medium text-green-800">Upload Successful!</h4>
-                    <p class="text-sm text-green-700 mt-1">Your assessment PDFs have been processed.</p>
+                    <p id="upload-committed-count" class="text-sm text-green-700 mt-1">Your assessment PDFs have been processed.</p>
                 </div>
             </div>
             <div class="mt-4">
@@ -180,7 +180,7 @@
                     <svg class="w-5 h-5 text-blue-600 mr-3 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                         <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
                     </svg>
-                    <p>Upload assessment notification PDFs from your teachers</p>
+                    <p>Upload assessment notification PDFs</p>
                 </div>
                 <div class="flex items-start">
                     <svg class="w-5 h-5 text-blue-600 mr-3 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
@@ -192,13 +192,7 @@
                     <svg class="w-5 h-5 text-blue-600 mr-3 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                         <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
                     </svg>
-                    <p>A personalized study schedule will be generated automatically</p>
-                </div>
-                <div class="flex items-start">
-                    <svg class="w-5 h-5 text-blue-600 mr-3 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
-                    </svg>
-                    <p>Files must be in PDF format and under 10MB each</p>
+                    <p>Files must be PDFs</p>
                 </div>
             </div>
         </div>
