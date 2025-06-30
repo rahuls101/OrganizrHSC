@@ -68,3 +68,7 @@ def create_user(fname, lname, email, pword):
     new_user = User(firstname=fname, lastname=lname, email=email, password=hashed_pw)
     db.session.add(new_user)
     db.session.commit()
+
+
+def allowed_file(filename, allowed_extensions={'pdf'}): 
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in allowed_extensions

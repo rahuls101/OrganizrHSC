@@ -1,17 +1,31 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify
 from markupsafe import escape
 from dotenv import load_dotenv
-from models import db, User
-from auth import validate_user_signup, validate_user_login, create_user
+from models import db, User, Assessment
+import fitz
+from auth import validate_user_signup, validate_user_login, create_user, allowed_file
 import os 
-from datetime import datetime, timezone
+from datetime import datetime
+from pdf_utils import process_file
+from werkzeug.utils import secure_filename
 
 load_dotenv() 
 
 app = Flask(__name__)
-app.secret_key = os.getenv("SECRET_KEY", "defaultsecretkey")
+app.secret_key = os.getenv("SECRET_KEY", "defaultsecretky")
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
+
+
+UPLOAD_FOLDER = os.path.join(os.getcwd(), 'uploads')
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+if not os.path.exists(UPLOAD_FOLDER): 
+    os.makedirs(UPLOAD_FOLDER)
+
+
 db.init_app(app)
+
+
 
 @app.route('/')
 def landing():
@@ -58,7 +72,7 @@ def signup():
     
 @app.route('/logout')
 def logout(): 
-    session.pop('user_id', None)
+    session.clear()
     return redirect(url_for('landing', message='Logged out successfully', type='success'))
 
 
@@ -93,13 +107,100 @@ def dashboard():
         num_close_assessments=len(upcoming_this_week), 
     )
 
-@app.route('/upload')
+
+@app.route('/upload', methods=['GET', 'POST'])
 def upload():
-    if 'user_id' not in session: 
+    if 'user_id' not in session:
         return redirect(url_for('login', message='Please log in to continue', type='error'))
-    
+
     user = User.query.get(session['user_id'])
+
+    if request.method == 'POST':
+        files = request.files.getlist('file') 
+        if not files:
+            return jsonify({})
+
+        parsed_assessments = session.get('parsed_assessments', {})
+        results = {}
+
+        for file in files:
+            filename = file.filename
+            if not file or not allowed_file(filename):
+                results[filename] = False
+                continue
+
+            result = process_file(file, app.config['UPLOAD_FOLDER'])
+            if not result:
+                results[filename] = False
+                continue
+
+            parsed_assessments[result['filename']] = result
+            results[filename] = True
+
+        session['parsed_assessments'] = parsed_assessments
+        session.modified = True
+
+        return jsonify(results)  
+
     return render_template('upload.html', user=user)
+
+@app.route('/commit-assessments', methods=['POST'])
+def commit_assessments():
+    if 'user_id' not in session:
+        return jsonify(False), 401
+    
+    user_id = session['user_id']
+    data = request.get_json()
+    filenames = data.get('filenames', [])
+
+    if not filenames:
+        return jsonify(False), 400
+
+    parsed = session.get('parsed_assessments', {})
+
+    committed = 0
+    for fname in filenames:
+        secure_name = secure_filename(fname)
+        info = parsed.get(secure_name)
+        if not info:
+            continue  
+
+        exists = Assessment.query.filter_by(
+            user_id=user_id,
+            title=info['title'],
+            due_date=datetime.fromisoformat(info['due_date'])
+        ).first()
+
+        if exists:
+            continue
+
+        try:
+            new_assessment = Assessment(
+                user_id=user_id,
+                subject_code=info['subject_code'],
+                title=info['title'],
+                description=info['description'],
+                due_date=datetime.fromisoformat(info['due_date'])
+            )
+            db.session.add(new_assessment)
+            committed += 1
+        except Exception as e:
+            print('Error committing assessment:', e)
+
+    db.session.commit()
+
+    return jsonify({'success': True, 'message': f'{committed} assessments commited'})
+
+
+
+@app.route('/clear-parsed', methods=['POST'])
+def clear_parsed(): 
+    if 'parsed_assessments' in session: 
+        session.pop('parsed_assessments')
+        session.modified = True 
+
+    return jsonify(True)
+
 
 @app.route('/schedule')
 def schedule():
@@ -107,7 +208,7 @@ def schedule():
         return redirect(url_for('login', message='Please log in to continue', type='error'))
     
     user = User.query.get(session['user_id'])
-    return render_template('schedule.html')
+    return render_template('schedule.html', user=user)
 
 
 @app.route('/check_email', methods=['POST'])
@@ -115,6 +216,7 @@ def check_email():
     email = request.json.get('email')
     exists = User.query.filter_by(email=email).first() is not None
     return jsonify({'exists': exists})
+
 
 
 if __name__ == '__main__': 
