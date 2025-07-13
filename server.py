@@ -8,6 +8,7 @@ import os
 from datetime import datetime
 from pdf_utils import process_file
 from werkzeug.utils import secure_filename
+from schedule_generator import generate_schedule_for_new_assessments
 
 load_dotenv() 
 
@@ -188,6 +189,9 @@ def commit_assessments():
             print('Error committing assessment:', e)
 
     db.session.commit()
+
+    # generate study sessions for any newly committed assessments 
+    generate_schedule_for_new_assessments(user_id)
 
     return jsonify({'success': True, 'message': f'{committed} assessments commited'})
 

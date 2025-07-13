@@ -26,4 +26,4 @@ class StudySession(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     assessment_id = db.Column(db.Integer, db.ForeignKey('assessment.id'), nullable=False)
     date = db.Column(db.Date, nullable=False)
-    time = db.Column(db.Time, nullable=False)
+    time = db.Column(db.Integer, nullable=False)
