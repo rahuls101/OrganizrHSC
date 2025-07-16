@@ -11,6 +11,18 @@ from werkzeug.utils import secure_filename
 from schedule_generator import generate_schedule_for_new_assessments
 from collections import defaultdict
 
+# subject colour mapping 
+
+subject_colours = {
+    'MAT': 'blue',
+    'PHY': 'green',
+    'ENG': 'purple',
+    'HIS': 'yellow',
+    'CHE': 'indigo',
+    'BIO': 'pink',
+    }
+
+
 load_dotenv() 
 
 app = Flask(__name__)
@@ -27,6 +39,12 @@ if not os.path.exists(UPLOAD_FOLDER):
 
 db.init_app(app)
 
+
+#inject subject colours into any template automatically 
+
+@app.context_processor
+def inject_subject_colours(): 
+    return dict(subject_colours=subject_colours)
 
 
 @app.route('/')
@@ -213,6 +231,7 @@ def schedule():
         return redirect(url_for('login', message='Please log in to continue', type='error'))
     
     user = User.query.get(session['user_id'])
+
 
     #get week offset
     week_offset = int(request.args.get('week', 0))

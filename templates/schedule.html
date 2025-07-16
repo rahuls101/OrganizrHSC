@@ -148,12 +148,11 @@
                         <div class="p-2 border-r border-gray-200">
                         {% set sessions = session_map.get((date, hour), []) %}
                         {% for session in sessions %}
-                            <div class="bg-blue-100 border border-blue-200 rounded-lg p-2 mb-1">
-                            <div class="text-xs font-medium text-blue-800">{{ session.assessment.subject_code }}</div>
-                            <div class="text-xs text-blue-600">{{ session.assessment.title }}</div>
-                            <div class="text-xs text-blue-500 mt-1">
-                                2 hours
-                            </div>
+                            {% set colour = subject_colours.get(session.assessment.subject_code, 'gray') %}
+                            <div class="bg-{{ colour }}-100 border border-{{ colour }}-200 rounded-lg p-2 mb-1">
+                            <div class="text-xs font-medium text-{{ colour }}-800">{{ session.assessment.subject_code }}</div>
+                            <div class="text-xs text-{{ colour }}-600">{{ session.assessment.title }}</div>
+                            <div class="text-xs text-{{ colour }}-500 mt-1">2 hours</div>
                             </div>
                         {% endfor %}
                         </div>

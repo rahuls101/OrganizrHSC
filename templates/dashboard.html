@@ -191,8 +191,9 @@
                             <div class="flex-1">
                                 <div class="flex items-center">
                                     <div class="flex-shrink-0">
-                                        <div class="w-10 h-10 {{ color_bg }} rounded-lg flex items-center justify-center">
-                                            <span class="{{ color_text }} font-semibold text-sm">{{ assessment.subject_code }}</span>
+                                        {% set subject_color = subject_colours.get(assessment.subject_code, 'gray') %}
+                                        <div class="w-10 h-10 bg-{{ subject_color }}-100 rounded-lg flex items-center justify-center">
+                                            <span class="text-{{ subject_color }}-800 font-semibold text-sm">{{ assessment.subject_code }}</span>
                                         </div>
                                     </div>
                                     <div class="ml-4">
