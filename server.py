@@ -1,11 +1,11 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify
 from markupsafe import escape
 from dotenv import load_dotenv
-from models import db, User, Assessment
+from models import db, User, Assessment, StudySession
 import fitz
 from auth import validate_user_signup, validate_user_login, create_user, allowed_file
 import os 
-from datetime import datetime
+from datetime import datetime, timedelta
 from pdf_utils import process_file
 from werkzeug.utils import secure_filename
 from schedule_generator import generate_schedule_for_new_assessments
@@ -212,7 +212,30 @@ def schedule():
         return redirect(url_for('login', message='Please log in to continue', type='error'))
     
     user = User.query.get(session['user_id'])
-    return render_template('schedule.html', user=user)
+
+    #get week offset
+    week_offset = int(request.args.get('week', 0))
+
+    # Find monday of the current week then shift by week_offset
+    today = datetime.now().date()
+    start_of_week = today - timedelta(days=today.weekday()) + timedelta(weeks=week_offset)
+    end_of_week = start_of_week + timedelta(days=7)
+
+    # filter to find sessions that fall between monday and sunday inclusive
+    study_sessions = StudySession.query.filter(
+        StudySession.user_id == user.id,
+        StudySession.date >= start_of_week,
+        StudySession.date < end_of_week
+    ).order_by(StudySession.date, StudySession.time).all()
+
+    return render_template(
+        'schedule.html', 
+        user=user, 
+        study_sessions=study_sessions, 
+        week_start=start_of_week, 
+        week_offset=week_offset, 
+        timedelta=timedelta
+        )
 
 
 @app.route('/check_email', methods=['POST'])

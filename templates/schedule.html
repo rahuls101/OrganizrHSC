@@ -70,12 +70,16 @@
                     <p class="text-gray-600">Your personalized weekly study plan</p>
                 </div>
                 <div class="mt-4 sm:mt-0 flex space-x-3">
-                    <button class="bg-wcc-blue hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
-                        This Week
-                    </button>
-                    <button class="bg-white hover:bg-gray-50 text-gray-700 border border-gray-300 px-4 py-2 rounded-lg text-sm font-medium transition-colors">
-                        Next Week
-                    </button>
+                    <a href="{{ url_for('schedule', week=week_offset - 1) }}">
+                        <button class="bg-white hover:bg-gray-50 text-gray-700 border border-gray-300 px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+                            Previous Week
+                        </button>
+                    </a>
+                    <a href="{{ url_for('schedule', week=week_offset + 1) }}">
+                        <button class="bg-white hover:bg-gray-50 text-gray-700 border border-gray-300 px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+                            Next Week
+                        </button>
+                    </a>
                 </div>
             </div>
         </div>
@@ -83,19 +87,27 @@
         <!-- Week Navigation -->
         <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-6">
             <div class="flex items-center justify-between">
-                <button class="p-2 hover:bg-gray-100 rounded-lg transition-colors">
+                <!-- Left Arrow = Previous Week -->
+                <a href="{{ url_for('schedule', week=week_offset - 1) }}" class="p-2 hover:bg-gray-100 rounded-lg transition-colors">
                     <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
                     </svg>
-                </button>
-                <h2 class="text-lg font-semibold text-gray-900">March 11 - March 17, 2024</h2>
-                <button class="p-2 hover:bg-gray-100 rounded-lg transition-colors">
+                </a>
+
+                <!-- Week Date Range -->
+                <h2 class="text-lg font-semibold text-gray-900">
+                    {{ week_start.strftime('%B %d') }} - {{ (week_start + timedelta(days=6)).strftime('%B %d, %Y') }}
+                </h2>
+
+                <!-- Right Arrow = Next Week -->
+                <a href="{{ url_for('schedule', week=week_offset + 1) }}" class="p-2 hover:bg-gray-100 rounded-lg transition-colors">
                     <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                     </svg>
-                </button>
+                </a>
             </div>
         </div>
+
 
         <!-- Weekly Calendar Grid -->
         <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
