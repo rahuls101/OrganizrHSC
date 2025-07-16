@@ -10,17 +10,8 @@ from pdf_utils import process_file
 from werkzeug.utils import secure_filename
 from schedule_generator import generate_schedule_for_new_assessments
 from collections import defaultdict
+from schedule_stats import calculate_weekly_stats
 
-# subject colour mapping 
-
-subject_colours = {
-    'MAT': 'blue',
-    'PHY': 'green',
-    'ENG': 'purple',
-    'HIS': 'yellow',
-    'CHE': 'indigo',
-    'BIO': 'pink',
-    }
 
 
 load_dotenv() 
@@ -43,9 +34,35 @@ db.init_app(app)
 #inject subject colours into any template automatically 
 
 @app.context_processor
-def inject_subject_colours(): 
-    return dict(subject_colours=subject_colours)
+def inject_globals(): 
+    
+    # subject colour mapping 
 
+    subject_colours = {
+    'MAT': 'blue',
+    'PHY': 'green',
+    'ENG': 'purple',
+    'HIS': 'yellow',
+    'CHE': 'indigo',
+    'BIO': 'pink',
+    'SOF': 'gray'
+    }
+
+    subject_names = {
+        'MAT': 'Mathematics',
+        'PHY': 'Physics',
+        'ENG': 'English',
+        'HIS': 'History',
+        'CHE': 'Chemistry',
+        'BIO': 'Biology',
+        'SOF': 'Software Engineering', 
+        'ENT': 'Enterprise Computing'
+    }
+
+    return dict(
+        subject_colours = subject_colours,
+        subject_names = subject_names
+    )
 
 @app.route('/')
 def landing():
@@ -255,6 +272,13 @@ def schedule():
     for studys in study_sessions: 
         session_map[(studys.date, studys.time)].append(studys)
 
+
+
+    #get weekly summary 
+
+    weekly_summary = calculate_weekly_stats(study_sessions)
+
+
     return render_template(
         'schedule.html', 
         user=user, 
@@ -262,6 +286,7 @@ def schedule():
         session_map = session_map,
         week_start=start_of_week, 
         week_offset=week_offset, 
+        weekly_summary = weekly_summary,
         timedelta=timedelta
         )
 

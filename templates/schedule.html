@@ -149,8 +149,10 @@
                         {% set sessions = session_map.get((date, hour), []) %}
                         {% for session in sessions %}
                             {% set colour = subject_colours.get(session.assessment.subject_code, 'gray') %}
+                            {% set code = session.assessment.subject_code %}
+                            {% set name = subject_names.get(code, code) %}
                             <div class="bg-{{ colour }}-100 border border-{{ colour }}-200 rounded-lg p-2 mb-1">
-                            <div class="text-xs font-medium text-{{ colour }}-800">{{ session.assessment.subject_code }}</div>
+                            <div class="text-xs font-medium text-{{ colour }}-800">{{ name }}</div>
                             <div class="text-xs text-{{ colour }}-600">{{ session.assessment.title }}</div>
                             <div class="text-xs text-{{ colour }}-500 mt-1">2 hours</div>
                             </div>
@@ -171,16 +173,22 @@
                 <h3 class="text-lg font-semibold text-gray-900 mb-4">Weekly Summary</h3>
                 <div class="space-y-3">
                     <div class="flex justify-between items-center">
-                        <span class="text-sm text-gray-600">Total Study Hours</span>
-                        <span class="text-sm font-medium text-gray-900">18.5 hours</span>
+                        <span class="text-sm text-gray-600">Total Planned Study Hours</span>
+                        <span class="text-sm font-medium text-gray-900">
+                            {{ weekly_summary.total_hours }} hours
+                        </span>
                     </div>
                     <div class="flex justify-between items-center">
-                        <span class="text-sm text-gray-600">Sessions Completed</span>
-                        <span class="text-sm font-medium text-gray-900">12 / 15</span>
+                        <span class="text-sm text-gray-600">Sessions Planned</span>
+                        <span class="text-sm font-medium text-gray-900">
+                            {{ weekly_summary.total_sessions}}
+                        </span>
                     </div>
                     <div class="flex justify-between items-center">
                         <span class="text-sm text-gray-600">Most Studied Subject</span>
-                        <span class="text-sm font-medium text-gray-900">Mathematics</span>
+                        <span class="text-sm font-medium text-gray-900">
+                            {{ subject_names.get(weekly_summary.most_subject, 'N/A') }}
+                        </span>
                     </div>
                 </div>
             </div>
@@ -189,41 +197,17 @@
             <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
                 <h3 class="text-lg font-semibold text-gray-900 mb-4">Subject Breakdown</h3>
                 <div class="space-y-3">
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center">
-                            <div class="w-3 h-3 bg-blue-500 rounded-full mr-3"></div>
-                            <span class="text-sm text-gray-600">Mathematics</span>
+                    {% for code, hours in weekly_summary.subject_breakdown.items() %}
+                        {% set colour = subject_colours.get(code, 'gray') %}
+                        {% set label = subject_names.get(code, 'Other') %}
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center">
+                                <div class="w-3 h-3 bg-{{ colour }}-500 rounded-full mr-3"></div>
+                                <span class="text-sm text-gray-600">{{ label }}</span>
+                            </div>
+                            <span class="text-sm font-medium text-gray-900">{{ hours }} hours</span>
                         </div>
-                        <span class="text-sm font-medium text-gray-900">7 hours</span>
-                    </div>
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center">
-                            <div class="w-3 h-3 bg-purple-500 rounded-full mr-3"></div>
-                            <span class="text-sm text-gray-600">English</span>
-                        </div>
-                        <span class="text-sm font-medium text-gray-900">3 hours</span>
-                    </div>
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center">
-                            <div class="w-3 h-3 bg-green-500 rounded-full mr-3"></div>
-                            <span class="text-sm text-gray-600">Physics</span>
-                        </div>
-                        <span class="text-sm font-medium text-gray-900">3.5 hours</span>
-                    </div>
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center">
-                            <div class="w-3 h-3 bg-yellow-500 rounded-full mr-3"></div>
-                            <span class="text-sm text-gray-600">History</span>
-                        </div>
-                        <span class="text-sm font-medium text-gray-900">3 hours</span>
-                    </div>
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center">
-                            <div class="w-3 h-3 bg-indigo-500 rounded-full mr-3"></div>
-                            <span class="text-sm text-gray-600">Other</span>
-                        </div>
-                        <span class="text-sm font-medium text-gray-900">2 hours</span>
-                    </div>
+                    {% endfor %}
                 </div>
             </div>
         </div>
