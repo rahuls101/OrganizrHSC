@@ -9,6 +9,7 @@ from datetime import datetime, timedelta
 from pdf_utils import process_file
 from werkzeug.utils import secure_filename
 from schedule_generator import generate_schedule_for_new_assessments
+from collections import defaultdict
 
 load_dotenv() 
 
@@ -228,10 +229,18 @@ def schedule():
         StudySession.date < end_of_week
     ).order_by(StudySession.date, StudySession.time).all()
 
+
+    #convert the list to a hashmap for fast lookups in the frontend 
+
+    session_map = defaultdict(list)
+    for studys in study_sessions: 
+        session_map[(studys.date, studys.time)].append(studys)
+
     return render_template(
         'schedule.html', 
         user=user, 
         study_sessions=study_sessions, 
+        session_map = session_map,
         week_start=start_of_week, 
         week_offset=week_offset, 
         timedelta=timedelta

@@ -27,3 +27,5 @@ class StudySession(db.Model):
     assessment_id = db.Column(db.Integer, db.ForeignKey('assessment.id'), nullable=False)
     date = db.Column(db.Date, nullable=False)
     time = db.Column(db.Integer, nullable=False)
+
+    assessment = db.relationship('Assessment', backref='study_sessions')
