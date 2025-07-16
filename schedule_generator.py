@@ -27,7 +27,9 @@ def generate_schedule_for_new_assessments(user_id):
             continue
 
         interval_days = max(days_available // 6, 1)
-        session_times = [7, 9, 11, 13, 15, 17, 19, 21]  # 7 AM to 9 PM
+        #session_times = [7, 9, 11, 13, 15, 17, 19, 21]  # INCLUDING SCHOOL HOURS
+        session_times = [7, 17, 19, 21]  # NOT INCLUDING SCHOOL HOURS
+
         sessions_created = 0
         offset = 1  # dont schedule on the due date
 

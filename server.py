@@ -11,6 +11,7 @@ from werkzeug.utils import secure_filename
 from schedule_generator import generate_schedule_for_new_assessments
 from collections import defaultdict
 from schedule_stats import calculate_weekly_stats
+from subject_config import subject_data
 
 
 
@@ -31,38 +32,16 @@ if not os.path.exists(UPLOAD_FOLDER):
 db.init_app(app)
 
 
-#inject subject colours into any template automatically 
-
 @app.context_processor
 def inject_globals(): 
-    
-    # subject colour mapping 
-
-    subject_colours = {
-    'MAT': 'blue',
-    'PHY': 'green',
-    'ENG': 'purple',
-    'HIS': 'yellow',
-    'CHE': 'indigo',
-    'BIO': 'pink',
-    'SOF': 'gray'
-    }
-
-    subject_names = {
-        'MAT': 'Mathematics',
-        'PHY': 'Physics',
-        'ENG': 'English',
-        'HIS': 'History',
-        'CHE': 'Chemistry',
-        'BIO': 'Biology',
-        'SOF': 'Software Engineering', 
-        'ENT': 'Enterprise Computing'
-    }
+    subject_colours = {code: info["colour"] for code,info in subject_data.items()}
+    subject_names = {code: info["name"] for code, info in subject_data.items()}
 
     return dict(
-        subject_colours = subject_colours,
+        subject_colours = subject_colours, 
         subject_names = subject_names
     )
+
 
 @app.route('/')
 def landing():
