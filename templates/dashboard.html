@@ -269,24 +269,30 @@
 
         </div> 
 
-        <!-- Recent Activity -->
+        <!-- Upcoming Sessions -->
         <div class="mt-8 bg-white rounded-lg shadow-sm border border-gray-200">
             <div class="px-6 py-4 border-b border-gray-200">
-                <h2 class="text-xl font-semibold text-gray-900">Recent Activity</h2>
+                <h2 class="text-xl font-semibold text-gray-900">Upcoming Sessions</h2>
             </div>
             <div class="p-6">
-                <div class="space-y-4">
-                    <p class="text-sm text-gray-500">No recent activity to show yet. </p>
-                    <!-- <div class="flex items-center">
-                        <div class="w-2 h-2 bg-green-400 rounded-full mr-3"></div>
-                        <p class="text-sm text-gray-600">
-                            <span class="font-medium">Mathematics Test</span> study schedule generated
-                        </p>
-                        <span class="ml-auto text-xs text-gray-400">2 hours ago</span>
-                    </div> --> 
-                </div>
+                {% if upcoming_sessions %}
+                    <div class="space-y-4">
+                        {% for session in upcoming_sessions %}
+                            <div class="flex items-center">
+                                <div class="w-2 h-2 bg-{{ session.subject_colour }}-500 rounded-full mr-3"></div>
+                                <p class="text-sm text-gray-600">
+                                    <span class="font-medium">{{ session.subject_name }}</span> @ {{ session.time }}:00
+                                </p>
+                                <span class="ml-auto text-xs text-gray-400">{{ session.date.strftime('%b %d, %Y') }}</span>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p class="text-sm text-gray-500">No upcoming sessions scheduled.</p>
+                {% endif %}
             </div>
         </div>
+
     </main>
 
     {% include 'footer.html' %}

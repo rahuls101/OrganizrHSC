@@ -27,8 +27,6 @@ def generate_schedule_for_new_assessments(user_id):
             continue
 
         interval_days = max(days_available // 6, 1)
-        #session_times = [7, 9, 11, 13, 15, 17, 19, 21]  # INCLUDING SCHOOL HOURS
-        session_times = [7, 17, 19, 21]  # NOT INCLUDING SCHOOL HOURS
 
         sessions_created = 0
         offset = 1  # dont schedule on the due date
@@ -36,13 +34,17 @@ def generate_schedule_for_new_assessments(user_id):
         for i in range(6):
             session_date = due_date - timedelta(days=offset + i * interval_days)
 
+            if session_date.weekday() >= 5: #weekend
+                session_times = [7,9,11,13,15,17,19,21]
+            else: 
+                session_times = [7,17,19,21] #weekday 
+
             #shuffle the sessiontimes for variety 
 
-            random_times = session_times.copy()
-            random.shuffle(random_times)
+            random.shuffle(session_times)
 
 
-            for session_time in random_times:
+            for session_time in session_times:
                 conflict = StudySession.query.filter_by(
                     user_id=user_id,
                     date=session_date,

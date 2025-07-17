@@ -99,6 +99,9 @@ def dashboard():
 
     user = User.query.get(session['user_id'])
 
+    '''
+    to show upcoming assessments on the dashboard
+    '''
 
     now = datetime.now()
 
@@ -115,12 +118,35 @@ def dashboard():
     upcoming_this_week = [a for a in sorted_assessments if 0 <= (a.due_date - now).days <= 7]
 
 
+    '''
+    to show upcoming session on the dashboard
+    '''
+
+    #get todays date
+    today = now.date() 
+
+    #query and filter users upcoming sessions 
+
+    upcoming_sessions = StudySession.query.filter(
+        StudySession.user_id == user.id, 
+        StudySession.date >= today 
+    ).order_by(StudySession.date, StudySession.time).limit(5).all()
+
+    for studysession in upcoming_sessions: 
+        code = studysession.assessment.subject_code
+        subject_info = subject_data.get(code)
+        studysession.subject_name = subject_info["name"] if subject_info else code 
+        studysession.subject_colour = subject_info["colour"] if subject_info else "gray"
+
+
+
     return render_template(
         'dashboard.html',
         user=user, 
         now = now,
         sorted_assessments = sorted_assessments,
         num_close_assessments=len(upcoming_this_week), 
+        upcoming_sessions = upcoming_sessions
     )
 
 
