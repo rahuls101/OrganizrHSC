@@ -21,3 +21,11 @@ class Assessment(db.Model):
     description = db.Column(db.Text, nullable = True)
     due_date = db.Column(db.DateTime, nullable = False)
 
+class StudySession(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    assessment_id = db.Column(db.Integer, db.ForeignKey('assessment.id'), nullable=False)
+    date = db.Column(db.Date, nullable=False)
+    time = db.Column(db.Integer, nullable=False)
+
+    assessment = db.relationship('Assessment', backref='study_sessions')

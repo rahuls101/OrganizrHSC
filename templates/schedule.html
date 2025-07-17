@@ -20,6 +20,12 @@
 </head>
 <body class="bg-gray-50 min-h-screen">
 
+    <!-- Toast notification -->
+    <div id="toast-message"
+        class="hidden fixed top-5 left-1/2 transform -translate-x-1/2 z-50 max-w-md w-full px-6 py-4 rounded-xl shadow-lg border text-center transition-opacity duration-500">
+        <span id="toast-text" class="text-base font-semibold block"></span>
+    </div>
+
     <!-- Navbar -->
     <nav class="bg-white border-gray-200 border-b shadow-sm px-4 lg:px-6 py-2.5">
         <div class="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl">
@@ -70,12 +76,16 @@
                     <p class="text-gray-600">Your personalized weekly study plan</p>
                 </div>
                 <div class="mt-4 sm:mt-0 flex space-x-3">
-                    <button class="bg-wcc-blue hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
-                        This Week
-                    </button>
-                    <button class="bg-white hover:bg-gray-50 text-gray-700 border border-gray-300 px-4 py-2 rounded-lg text-sm font-medium transition-colors">
-                        Next Week
-                    </button>
+                    <a href="{{ url_for('schedule', week=week_offset - 1) }}">
+                        <button class="bg-white hover:bg-gray-50 text-gray-700 border border-gray-300 px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+                            Previous Week
+                        </button>
+                    </a>
+                    <a href="{{ url_for('schedule', week=week_offset + 1) }}">
+                        <button class="bg-white hover:bg-gray-50 text-gray-700 border border-gray-300 px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+                            Next Week
+                        </button>
+                    </a>
                 </div>
             </div>
         </div>
@@ -83,19 +93,27 @@
         <!-- Week Navigation -->
         <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-6">
             <div class="flex items-center justify-between">
-                <button class="p-2 hover:bg-gray-100 rounded-lg transition-colors">
+                <!-- Left Arrow = Previous Week -->
+                <a href="{{ url_for('schedule', week=week_offset - 1) }}" class="p-2 hover:bg-gray-100 rounded-lg transition-colors">
                     <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
                     </svg>
-                </button>
-                <h2 class="text-lg font-semibold text-gray-900">March 11 - March 17, 2024</h2>
-                <button class="p-2 hover:bg-gray-100 rounded-lg transition-colors">
+                </a>
+
+                <!-- Week Date Range -->
+                <h2 class="text-lg font-semibold text-gray-900">
+                    {{ week_start.strftime('%B %d') }} - {{ (week_start + timedelta(days=6)).strftime('%B %d, %Y') }}
+                </h2>
+
+                <!-- Right Arrow = Next Week -->
+                <a href="{{ url_for('schedule', week=week_offset + 1) }}" class="p-2 hover:bg-gray-100 rounded-lg transition-colors">
                     <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                     </svg>
-                </button>
+                </a>
             </div>
         </div>
+
 
         <!-- Weekly Calendar Grid -->
         <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
@@ -104,180 +122,61 @@
                 <div class="p-4 bg-gray-50 border-r border-gray-200">
                     <span class="text-sm font-medium text-gray-500">Time</span>
                 </div>
-                <div class="p-4 bg-gray-50 border-r border-gray-200 text-center">
-                    <div class="text-sm font-medium text-gray-900">Monday</div>
-                    <div class="text-xs text-gray-500">Mar 11</div>
-                </div>
-                <div class="p-4 bg-gray-50 border-r border-gray-200 text-center">
-                    <div class="text-sm font-medium text-gray-900">Tuesday</div>
-                    <div class="text-xs text-gray-500">Mar 12</div>
-                </div>
-                <div class="p-4 bg-gray-50 border-r border-gray-200 text-center">
-                    <div class="text-sm font-medium text-gray-900">Wednesday</div>
-                    <div class="text-xs text-gray-500">Mar 13</div>
-                </div>
-                <div class="p-4 bg-gray-50 border-r border-gray-200 text-center">
-                    <div class="text-sm font-medium text-gray-900">Thursday</div>
-                    <div class="text-xs text-gray-500">Mar 14</div>
-                </div>
-                <div class="p-4 bg-gray-50 border-r border-gray-200 text-center">
-                    <div class="text-sm font-medium text-gray-900">Friday</div>
-                    <div class="text-xs text-gray-500">Mar 15</div>
-                </div>
-                <div class="p-4 bg-gray-50 border-r border-gray-200 text-center">
-                    <div class="text-sm font-medium text-gray-900">Saturday</div>
-                    <div class="text-xs text-gray-500">Mar 16</div>
-                </div>
-                <div class="p-4 bg-gray-50 text-center">
-                    <div class="text-sm font-medium text-gray-900">Sunday</div>
-                    <div class="text-xs text-gray-500">Mar 17</div>
-                </div>
+                {% for i in range(7) %}
+                    {% set date = week_start + timedelta(days=i) %}
+                    <div class="p-4 bg-gray-50 border-r border-gray-200 text-center">
+                        <div class="text-sm font-medium text-gray-900">{{ date.strftime('%A') }}</div>
+                        <div class="text-xs text-gray-500">{{ date.strftime('%b %d') }}</div>
+                    </div>
+                {% endfor %}
             </div>
 
             <!-- Calendar Body -->
             <div class="divide-y divide-gray-200">
-                <!-- 9:00 AM Row -->
-                <div class="grid grid-cols-8 min-h-16">
+                {% for hour in [7, 9, 11, 13, 15, 17, 19, 21] %}
+                    <div class="grid grid-cols-8 min-h-16">
+                    <!-- Time Label -->
                     <div class="p-4 bg-gray-50 border-r border-gray-200 flex items-center">
-                        <span class="text-sm text-gray-600">9:00 AM</span>
+                        <span class="text-sm text-gray-600">
+                        {% if hour < 12 %}
+                            {{ hour }}:00 AM
+                        {% elif hour == 12 %}
+                            12:00 PM
+                        {% else %}
+                            {{ hour - 12 }}:00 PM
+                        {% endif %}
+                        </span>
                     </div>
-                    <div class="p-2 border-r border-gray-200">
-                        <div class="bg-blue-100 border border-blue-200 rounded-lg p-2 h-full">
-                            <div class="text-xs font-medium text-blue-800">Mathematics</div>
-                            <div class="text-xs text-blue-600">Calculus Review</div>
-                            <div class="text-xs text-blue-500 mt-1">2 hours</div>
-                        </div>
-                    </div>
-                    <div class="p-2 border-r border-gray-200"></div>
-                    <div class="p-2 border-r border-gray-200">
-                        <div class="bg-green-100 border border-green-200 rounded-lg p-2 h-full">
-                            <div class="text-xs font-medium text-green-800">Physics</div>
-                            <div class="text-xs text-green-600">Lab Prep</div>
-                            <div class="text-xs text-green-500 mt-1">1.5 hours</div>
-                        </div>
-                    </div>
-                    <div class="p-2 border-r border-gray-200"></div>
-                    <div class="p-2 border-r border-gray-200"></div>
-                    <div class="p-2"></div>
-                </div>
 
-                <!-- 11:00 AM Row -->
-                <div class="grid grid-cols-8 min-h-16">
-                    <div class="p-4 bg-gray-50 border-r border-gray-200 flex items-center">
-                        <span class="text-sm text-gray-600">11:00 AM</span>
-                    </div>
-                    <div class="p-2 border-r border-gray-200"></div>
-                    <div class="p-2 border-r border-gray-200">
-                        <div class="bg-purple-100 border border-purple-200 rounded-lg p-2 h-full">
-                            <div class="text-xs font-medium text-purple-800">English</div>
-                            <div class="text-xs text-purple-600">Essay Writing</div>
-                            <div class="text-xs text-purple-500 mt-1">2 hours</div>
+                    <!-- Day Columns -->
+                    {% for i in range(7) %}
+                        {% set date = week_start + timedelta(days=i) %}
+                        <div class="p-2 border-r border-gray-200">
+                        {% set sessions = session_map.get((date, hour), []) %}
+                        {% for session in sessions %}
+                            {% set colour = subject_colours.get(session.assessment.subject_code, 'gray') %}
+                            {% set code = session.assessment.subject_code %}
+                            {% set name = subject_names.get(code, code) %}
+                            <div class="bg-{{ colour }}-100 border border-{{ colour }}-200 rounded-lg p-2 mb-1">
+                            <div class="text-xs font-medium text-{{ colour }}-800">{{ name }}</div>
+                            <div class="text-xs text-{{ colour }}-600">{{ session.assessment.title }}</div>
+                            <div class="text-xs text-{{ colour }}-500 mt-1">2 hours</div>
+                            </div>
+                        {% endfor %}
                         </div>
+                    {% endfor %}
                     </div>
-                    <div class="p-2 border-r border-gray-200"></div>
-                    <div class="p-2 border-r border-gray-200">
-                        <div class="bg-red-100 border border-red-200 rounded-lg p-2 h-full">
-                            <div class="text-xs font-medium text-red-800">Mathematics</div>
-                            <div class="text-xs text-red-600">Final Review</div>
-                            <div class="text-xs text-red-500 mt-1">3 hours</div>
-                        </div>
-                    </div>
-                    <div class="p-2 border-r border-gray-200">
-                        <div class="bg-yellow-100 border border-yellow-200 rounded-lg p-2 h-full">
-                            <div class="text-xs font-medium text-yellow-800">History</div>
-                            <div class="text-xs text-yellow-600">Research</div>
-                            <div class="text-xs text-yellow-500 mt-1">2 hours</div>
-                        </div>
-                    </div>
-                    <div class="p-2"></div>
-                </div>
-
-                <!-- 2:00 PM Row -->
-                <div class="grid grid-cols-8 min-h-16">
-                    <div class="p-4 bg-gray-50 border-r border-gray-200 flex items-center">
-                        <span class="text-sm text-gray-600">2:00 PM</span>
-                    </div>
-                    <div class="p-2 border-r border-gray-200"></div>
-                    <div class="p-2 border-r border-gray-200"></div>
-                    <div class="p-2 border-r border-gray-200">
-                        <div class="bg-indigo-100 border border-indigo-200 rounded-lg p-2 h-full">
-                            <div class="text-xs font-medium text-indigo-800">Chemistry</div>
-                            <div class="text-xs text-indigo-600">Practice Problems</div>
-                            <div class="text-xs text-indigo-500 mt-1">1 hour</div>
-                        </div>
-                    </div>
-                    <div class="p-2 border-r border-gray-200"></div>
-                    <div class="p-2 border-r border-gray-200">
-                        <div class="bg-pink-100 border border-pink-200 rounded-lg p-2 h-full">
-                            <div class="text-xs font-medium text-pink-800">Biology</div>
-                            <div class="text-xs text-pink-600">Chapter Review</div>
-                            <div class="text-xs text-pink-500 mt-1">1.5 hours</div>
-                        </div>
-                    </div>
-                    <div class="p-2">
-                        <div class="bg-gray-100 border border-gray-200 rounded-lg p-2 h-full">
-                            <div class="text-xs font-medium text-gray-800">Free Time</div>
-                            <div class="text-xs text-gray-600">Relaxation</div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 4:00 PM Row -->
-                <div class="grid grid-cols-8 min-h-16">
-                    <div class="p-4 bg-gray-50 border-r border-gray-200 flex items-center">
-                        <span class="text-sm text-gray-600">4:00 PM</span>
-                    </div>
-                    <div class="p-2 border-r border-gray-200">
-                        <div class="bg-green-100 border border-green-200 rounded-lg p-2 h-full">
-                            <div class="text-xs font-medium text-green-800">Physics</div>
-                            <div class="text-xs text-green-600">Lab Report</div>
-                            <div class="text-xs text-green-500 mt-1">2 hours</div>
-                        </div>
-                    </div>
-                    <div class="p-2 border-r border-gray-200"></div>
-                    <div class="p-2 border-r border-gray-200"></div>
-                    <div class="p-2 border-r border-gray-200">
-                        <div class="bg-purple-100 border border-purple-200 rounded-lg p-2 h-full">
-                            <div class="text-xs font-medium text-purple-800">English</div>
-                            <div class="text-xs text-purple-600">Literature Analysis</div>
-                            <div class="text-xs text-purple-500 mt-1">1 hour</div>
-                        </div>
-                    </div>
-                    <div class="p-2 border-r border-gray-200"></div>
-                    <div class="p-2">
-                        <div class="bg-blue-100 border border-blue-200 rounded-lg p-2 h-full">
-                            <div class="text-xs font-medium text-blue-800">Mathematics</div>
-                            <div class="text-xs text-blue-600">Practice Test</div>
-                            <div class="text-xs text-blue-500 mt-1">2 hours</div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 7:00 PM Row -->
-                <div class="grid grid-cols-8 min-h-16">
-                    <div class="p-4 bg-gray-50 border-r border-gray-200 flex items-center">
-                        <span class="text-sm text-gray-600">7:00 PM</span>
-                    </div>
-                    <div class="p-2 border-r border-gray-200"></div>
-                    <div class="p-2 border-r border-gray-200">
-                        <div class="bg-yellow-100 border border-yellow-200 rounded-lg p-2 h-full">
-                            <div class="text-xs font-medium text-yellow-800">History</div>
-                            <div class="text-xs text-yellow-600">Essay Outline</div>
-                            <div class="text-xs text-yellow-500 mt-1">1 hour</div>
-                        </div>
-                    </div>
-                    <div class="p-2 border-r border-gray-200"></div>
-                    <div class="p-2 border-r border-gray-200"></div>
-                    <div class="p-2 border-r border-gray-200"></div>
-                    <div class="p-2">
-                        <div class="bg-gray-100 border border-gray-200 rounded-lg p-2 h-full">
-                            <div class="text-xs font-medium text-gray-800">Review</div>
-                            <div class="text-xs text-gray-600">Weekly Summary</div>
-                            <div class="text-xs text-gray-500 mt-1">30 min</div>
-                        </div>
-                    </div>
-                </div>
+                {% endfor %}
             </div>
+            
+            
+        </div>
+
+        <div class="mt-4 mb-6 text-center">
+            <a href="{{ url_for('export_calendar') }}"
+            class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-xl shadow inline-block">
+                📅 Download Full Study Calendar (.ics)
+            </a>
         </div>
 
         <!-- Study Summary -->
@@ -287,16 +186,22 @@
                 <h3 class="text-lg font-semibold text-gray-900 mb-4">Weekly Summary</h3>
                 <div class="space-y-3">
                     <div class="flex justify-between items-center">
-                        <span class="text-sm text-gray-600">Total Study Hours</span>
-                        <span class="text-sm font-medium text-gray-900">18.5 hours</span>
+                        <span class="text-sm text-gray-600">Total Planned Study Hours</span>
+                        <span class="text-sm font-medium text-gray-900">
+                            {{ weekly_summary.total_hours }} hours
+                        </span>
                     </div>
                     <div class="flex justify-between items-center">
-                        <span class="text-sm text-gray-600">Sessions Completed</span>
-                        <span class="text-sm font-medium text-gray-900">12 / 15</span>
+                        <span class="text-sm text-gray-600">Sessions Planned</span>
+                        <span class="text-sm font-medium text-gray-900">
+                            {{ weekly_summary.total_sessions}}
+                        </span>
                     </div>
                     <div class="flex justify-between items-center">
                         <span class="text-sm text-gray-600">Most Studied Subject</span>
-                        <span class="text-sm font-medium text-gray-900">Mathematics</span>
+                        <span class="text-sm font-medium text-gray-900">
+                            {{ subject_names.get(weekly_summary.most_subject, 'N/A') }}
+                        </span>
                     </div>
                 </div>
             </div>
@@ -305,47 +210,26 @@
             <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
                 <h3 class="text-lg font-semibold text-gray-900 mb-4">Subject Breakdown</h3>
                 <div class="space-y-3">
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center">
-                            <div class="w-3 h-3 bg-blue-500 rounded-full mr-3"></div>
-                            <span class="text-sm text-gray-600">Mathematics</span>
+                    {% for code, hours in weekly_summary.subject_breakdown.items() %}
+                        {% set colour = subject_colours.get(code, 'gray') %}
+                        {% set label = subject_names.get(code, 'Other') %}
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center">
+                                <div class="w-3 h-3 bg-{{ colour }}-500 rounded-full mr-3"></div>
+                                <span class="text-sm text-gray-600">{{ label }}</span>
+                            </div>
+                            <span class="text-sm font-medium text-gray-900">{{ hours }} hours</span>
                         </div>
-                        <span class="text-sm font-medium text-gray-900">7 hours</span>
-                    </div>
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center">
-                            <div class="w-3 h-3 bg-purple-500 rounded-full mr-3"></div>
-                            <span class="text-sm text-gray-600">English</span>
-                        </div>
-                        <span class="text-sm font-medium text-gray-900">3 hours</span>
-                    </div>
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center">
-                            <div class="w-3 h-3 bg-green-500 rounded-full mr-3"></div>
-                            <span class="text-sm text-gray-600">Physics</span>
-                        </div>
-                        <span class="text-sm font-medium text-gray-900">3.5 hours</span>
-                    </div>
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center">
-                            <div class="w-3 h-3 bg-yellow-500 rounded-full mr-3"></div>
-                            <span class="text-sm text-gray-600">History</span>
-                        </div>
-                        <span class="text-sm font-medium text-gray-900">3 hours</span>
-                    </div>
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center">
-                            <div class="w-3 h-3 bg-indigo-500 rounded-full mr-3"></div>
-                            <span class="text-sm text-gray-600">Other</span>
-                        </div>
-                        <span class="text-sm font-medium text-gray-900">2 hours</span>
-                    </div>
+                    {% endfor %}
                 </div>
             </div>
         </div>
     </main>
 
     {% include 'footer.html' %}
-    
+
+<!-- Toast/notification script -->
+<script src="{{ url_for('static', filename='js/toast.js') }}"></script>  
+
 </body>
 </html>

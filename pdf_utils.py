@@ -2,28 +2,40 @@ import os
 import fitz  # PyMuPDF
 from werkzeug.utils import secure_filename
 from datetime import datetime
+from subject_config import name_to_code
 
 # -----------------------------
 # Individual extractors
 # -----------------------------
 
 def extract_subject_code(pdf): 
-    subject_map = {
-        "English": "ENG",
-        "Mathematics": "MAT",
-        "Physics": "PHY",
-        "Chemistry": "CHE",
-        "Biology": "BIO",
-        "Economics": "ECO",
-        "Business Studies": "BUS",
-        "Legal Studies": "LEG",
-        "Modern History": "MOD",
-        "PDHPE": "PDH",
-        # Add more HSC subjects as needed
-    }
-    text = pdf.get_text()
-    for subjectname, code in subject_map.items():
-        if subjectname in text:
+    text = pdf.get_text().lower()
+
+    if "math" or "english" in text: 
+        # Check for maths levels
+        if "mathematics extension 2" in text:
+            return "MEX2"
+        elif "mathematics extension 1" in text:
+            return "MEX1"
+        elif "mathematics advanced" in text:
+            return "MADV"
+        elif "mathematics standard" in text:
+            return "MSTD"
+
+        # Check for english levels
+        elif "english extension 2" in text:
+            return "EEX2"
+        elif "english extension 1" in text:
+            return "EEX1"
+        elif "english advanced" in text:
+            return "EADV"
+        elif "english standard" in text:
+            return "ESTD"
+    
+    #if its not a maths or english subjects just find code normally
+
+    for name, code in name_to_code.items():
+        if name.lower() in text:
             return code
     return False
 

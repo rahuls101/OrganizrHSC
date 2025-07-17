@@ -1,13 +1,21 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify
+from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify, make_response
 from markupsafe import escape
 from dotenv import load_dotenv
-from models import db, User, Assessment
+from models import db, User, Assessment, StudySession
 import fitz
 from auth import validate_user_signup, validate_user_login, create_user, allowed_file
 import os 
-from datetime import datetime
+from datetime import datetime, timedelta, time
 from pdf_utils import process_file
 from werkzeug.utils import secure_filename
+from schedule_generator import generate_schedule_for_new_assessments
+from collections import defaultdict
+from schedule_stats import calculate_weekly_stats
+from subject_config import subject_data
+from ics import Calendar, Event
+import pytz
+
+
 
 load_dotenv() 
 
@@ -25,6 +33,16 @@ if not os.path.exists(UPLOAD_FOLDER):
 
 db.init_app(app)
 
+
+@app.context_processor
+def inject_globals(): 
+    subject_colours = {code: info["colour"] for code,info in subject_data.items()}
+    subject_names = {code: info["name"] for code, info in subject_data.items()}
+
+    return dict(
+        subject_colours = subject_colours, 
+        subject_names = subject_names
+    )
 
 
 @app.route('/')
@@ -83,6 +101,9 @@ def dashboard():
 
     user = User.query.get(session['user_id'])
 
+    '''
+    to show upcoming assessments on the dashboard
+    '''
 
     now = datetime.now()
 
@@ -99,12 +120,35 @@ def dashboard():
     upcoming_this_week = [a for a in sorted_assessments if 0 <= (a.due_date - now).days <= 7]
 
 
+    '''
+    to show upcoming session on the dashboard
+    '''
+
+    #get todays date
+    today = now.date() 
+
+    #query and filter users upcoming sessions 
+
+    upcoming_sessions = StudySession.query.filter(
+        StudySession.user_id == user.id, 
+        StudySession.date >= today 
+    ).order_by(StudySession.date, StudySession.time).limit(5).all()
+
+    for studysession in upcoming_sessions: 
+        code = studysession.assessment.subject_code
+        subject_info = subject_data.get(code)
+        studysession.subject_name = subject_info["name"] if subject_info else code 
+        studysession.subject_colour = subject_info["colour"] if subject_info else "gray"
+
+
+
     return render_template(
         'dashboard.html',
         user=user, 
         now = now,
         sorted_assessments = sorted_assessments,
         num_close_assessments=len(upcoming_this_week), 
+        upcoming_sessions = upcoming_sessions
     )
 
 
@@ -189,6 +233,9 @@ def commit_assessments():
 
     db.session.commit()
 
+    # generate study sessions for any newly committed assessments 
+    generate_schedule_for_new_assessments(user_id)
+
     return jsonify({'success': True, 'message': f'{committed} assessments commited'})
 
 
@@ -208,7 +255,47 @@ def schedule():
         return redirect(url_for('login', message='Please log in to continue', type='error'))
     
     user = User.query.get(session['user_id'])
-    return render_template('schedule.html', user=user)
+
+
+    #get week offset
+    week_offset = int(request.args.get('week', 0))
+
+    # Find monday of the current week then shift by week_offset
+    today = datetime.now().date()
+    start_of_week = today - timedelta(days=today.weekday()) + timedelta(weeks=week_offset)
+    end_of_week = start_of_week + timedelta(days=7)
+
+    # filter to find sessions that fall between monday and sunday inclusive
+    study_sessions = StudySession.query.filter(
+        StudySession.user_id == user.id,
+        StudySession.date >= start_of_week,
+        StudySession.date < end_of_week
+    ).order_by(StudySession.date, StudySession.time).all()
+
+
+    #convert the list to a hashmap for fast lookups in the frontend 
+
+    session_map = defaultdict(list)
+    for studys in study_sessions: 
+        session_map[(studys.date, studys.time)].append(studys)
+
+
+
+    #get weekly summary 
+
+    weekly_summary = calculate_weekly_stats(study_sessions)
+
+
+    return render_template(
+        'schedule.html', 
+        user=user, 
+        study_sessions=study_sessions, 
+        session_map = session_map,
+        week_start=start_of_week, 
+        week_offset=week_offset, 
+        weekly_summary = weekly_summary,
+        timedelta=timedelta
+        )
 
 
 @app.route('/check_email', methods=['POST'])
@@ -217,7 +304,55 @@ def check_email():
     exists = User.query.filter_by(email=email).first() is not None
     return jsonify({'exists': exists})
 
+@app.route('/export-calendar')
+def export_calendar(): 
+    if 'user_id' not in session: 
+        return redirect(url_for('login', message='Please log in to continue', type='error'))
+    
+    user = User.query.get(session['user_id'])
 
+    # get all sessions for the user 
+
+    sessions = StudySession.query.filter(
+        StudySession.user_id == user.id
+    ).order_by(StudySession.date, StudySession.time).all()
+
+
+    if not sessions: 
+        return redirect(url_for('schedule', message="You have no study sessions to export.", type="error"))
+    
+
+    cal = Calendar()
+
+    for session_obj in sessions:
+        assessment = session_obj.assessment
+        subject_code = assessment.subject_code
+        subject_info = subject_data.get(subject_code, {})
+        subject_name = subject_info.get('name', subject_code)
+        
+        from_zone = pytz.timezone("Australia/Sydney")
+        to_zone = pytz.utc
+
+        # treat session time as AEST 
+        local_dt = from_zone.localize(datetime.combine(session_obj.date, time(hour=session_obj.time)))
+
+        #convert to utc for the ics file 
+
+        start_dt = local_dt.astimezone(to_zone)
+        end_dt = start_dt + timedelta(hours=2)
+
+        event = Event()
+        event.name = f"Study Session: {subject_name}"
+        event.begin = start_dt
+        event.end = end_dt
+        event.description = assessment.title
+
+        cal.events.add(event)
+
+    response = make_response(str(cal))
+    response.headers['Content-Disposition'] = 'attachment; filename=OrganizrHSC_studyschedule.ics'
+    response.headers['Content-Type'] = 'text/calendar'
+    return response
 
 if __name__ == '__main__': 
     app.run(debug=True)
