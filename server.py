@@ -1,17 +1,19 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify
+from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify, make_response
 from markupsafe import escape
 from dotenv import load_dotenv
 from models import db, User, Assessment, StudySession
 import fitz
 from auth import validate_user_signup, validate_user_login, create_user, allowed_file
 import os 
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, time
 from pdf_utils import process_file
 from werkzeug.utils import secure_filename
 from schedule_generator import generate_schedule_for_new_assessments
 from collections import defaultdict
 from schedule_stats import calculate_weekly_stats
 from subject_config import subject_data
+from ics import Calendar, Event
+import pytz
 
 
 
@@ -302,7 +304,55 @@ def check_email():
     exists = User.query.filter_by(email=email).first() is not None
     return jsonify({'exists': exists})
 
+@app.route('/export-calendar')
+def export_calendar(): 
+    if 'user_id' not in session: 
+        return redirect(url_for('login', message='Please log in to continue', type='error'))
+    
+    user = User.query.get(session['user_id'])
 
+    # get all sessions for the user 
+
+    sessions = StudySession.query.filter(
+        StudySession.user_id == user.id
+    ).order_by(StudySession.date, StudySession.time).all()
+
+
+    if not sessions: 
+        return redirect(url_for('schedule', message="You have no study sessions to export.", type="error"))
+    
+
+    cal = Calendar()
+
+    for session_obj in sessions:
+        assessment = session_obj.assessment
+        subject_code = assessment.subject_code
+        subject_info = subject_data.get(subject_code, {})
+        subject_name = subject_info.get('name', subject_code)
+        
+        from_zone = pytz.timezone("Australia/Sydney")
+        to_zone = pytz.utc
+
+        # treat session time as AEST 
+        local_dt = from_zone.localize(datetime.combine(session_obj.date, time(hour=session_obj.time)))
+
+        #convert to utc for the ics file 
+
+        start_dt = local_dt.astimezone(to_zone)
+        end_dt = start_dt + timedelta(hours=2)
+
+        event = Event()
+        event.name = f"Study Session: {subject_name}"
+        event.begin = start_dt
+        event.end = end_dt
+        event.description = assessment.title
+
+        cal.events.add(event)
+
+    response = make_response(str(cal))
+    response.headers['Content-Disposition'] = 'attachment; filename=OrganizrHSC_studyschedule.ics'
+    response.headers['Content-Type'] = 'text/calendar'
+    return response
 
 if __name__ == '__main__': 
     app.run(debug=True)

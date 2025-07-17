@@ -20,6 +20,12 @@
 </head>
 <body class="bg-gray-50 min-h-screen">
 
+    <!-- Toast notification -->
+    <div id="toast-message"
+        class="hidden fixed top-5 left-1/2 transform -translate-x-1/2 z-50 max-w-md w-full px-6 py-4 rounded-xl shadow-lg border text-center transition-opacity duration-500">
+        <span id="toast-text" class="text-base font-semibold block"></span>
+    </div>
+
     <!-- Navbar -->
     <nav class="bg-white border-gray-200 border-b shadow-sm px-4 lg:px-6 py-2.5">
         <div class="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl">
@@ -166,6 +172,13 @@
             
         </div>
 
+        <div class="mt-4 mb-6 text-center">
+            <a href="{{ url_for('export_calendar') }}"
+            class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-xl shadow inline-block">
+                📅 Download Full Study Calendar (.ics)
+            </a>
+        </div>
+
         <!-- Study Summary -->
         <div class="mt-8 grid md:grid-cols-2 gap-6">
             <!-- Weekly Summary -->
@@ -214,6 +227,9 @@
     </main>
 
     {% include 'footer.html' %}
-    
+
+<!-- Toast/notification script -->
+<script src="{{ url_for('static', filename='js/toast.js') }}"></script>  
+
 </body>
 </html>
