@@ -354,5 +354,10 @@ def export_calendar():
     response.headers['Content-Type'] = 'text/calendar'
     return response
 
+
+@app.route('/assessments')
+def assessments(): 
+    return render_template('assessments.html')
+
 if __name__ == '__main__': 
     app.run(debug=True)

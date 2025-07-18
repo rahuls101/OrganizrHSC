@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Assessments - WCC Planner</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'wcc-blue': '#1e40af',
+                        'wcc-light-blue': '#3b82f6',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    
+    <!-- Navbar -->
+    <nav class="bg-white border-gray-200 border-b shadow-sm px-4 lg:px-6 py-2.5">
+        <div class="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl">
+            
+            <h1 class="flex items-center">
+                <span class="text-xl font-bold text-wcc-blue">OrganizrHSC</span>
+            </h1>
+
+            <div class="justify-between items-center w-full lg:flex lg:w-auto lg:order-1">
+                <div class="flex flex-col mt-4 font-medium lg:flex-row lg:space-x-8 lg:mt-0">
+
+                    <a href="{{ url_for('dashboard') }}" class="px-4 py-2 text-wcc-blue font-semibold rounded-lg transition-all duration-200 hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 hover:shadow-md transform hover:-translate-y-0.5 relative overflow-hidden group">
+                        <span class="relative z-10">Dashboard</span>
+                        <div class="absolute inset-0 bg-gradient-to-r from-wcc-blue to-blue-600 opacity-0 group-hover:opacity-10 transition-opacity duration-200"></div>
+                    </a>
+
+                    <a href="{{ url_for('upload') }}" class="px-4 py-2 text-wcc-blue font-semibold rounded-lg transition-all duration-200 hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 hover:shadow-md transform hover:-translate-y-0.5 relative overflow-hidden group">
+                        <span class="relative z-10">Upload</span>
+                        <div class="absolute inset-0 bg-gradient-to-r from-wcc-blue to-blue-600 opacity-0 group-hover:opacity-10 transition-opacity duration-200"></div>
+                    </a>
+
+                    <a 
+                        href="{{ url_for('assessments') }}" 
+                        aria-current="page"
+                        class="px-4 py-2 text-white font-bold rounded-lg bg-gradient-to-r from-wcc-blue to-blue-600 shadow-md border border-blue-500 cursor-default pointer-events-none">
+                        <span class="relative z-10">Assessments</span>
+                    </a>
+                    
+                    <a href="{{ url_for('schedule') }}" class="px-4 py-2 text-wcc-blue font-semibold rounded-lg transition-all duration-200 hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 hover:shadow-md transform hover:-translate-y-0.5 relative overflow-hidden group">
+                        <span class="relative z-10">Schedule</span>
+                        <div class="absolute inset-0 bg-gradient-to-r from-wcc-blue to-blue-600 opacity-0 group-hover:opacity-10 transition-opacity duration-200"></div>
+                    </a>
+                    
+                </div>
+            </div>
+
+            <div class="flex items-center lg:order-2">
+                <a 
+                    href="{{ url_for('logout') }}" class="px-4 py-2 font-semibold text-red-600 bg-red-100 border-2 border-red-200 rounded-lg transition-colors duration-200 shadow-md hover:bg-gray-50 hover:shadow-lg transform hover:-translate-y-0.5">Log out
+                </a>
+
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Header Section -->
+        <div class="mb-8">
+            <h1 class="text-3xl font-bold text-gray-900 mb-2">Your Assessments</h1>
+            <p class="text-gray-600">Manage and update your assessments below.</p>
+        </div>
+
+
+        <!-- Assessments List -->
+        <div class="space-y-4">
+            <!-- Assessment Card 1 -->
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between">
+                    <div class="flex-1">
+                        <div class="flex items-start justify-between mb-4">
+                            <div class="flex items-center">
+                                <div class="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center mr-4">
+                                    <span class="text-red-600 font-semibold text-sm">MAT</span>
+                                </div>
+                                <div>
+                                    <h3 class="text-lg font-semibold text-gray-900">Calculus Final Exam</h3>
+                                    <p class="text-sm text-gray-600">Mathematics</p>
+                                </div>
+                            </div>
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                                Due in 2 days
+                            </span>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <p class="text-gray-700 text-sm">
+                                Comprehensive final examination covering differential and integral calculus, including applications to physics and engineering problems. Topics include limits, derivatives, integrals, and series.
+                            </p>
+                        </div>
+                        
+                        <div class="flex items-center text-sm text-gray-500">
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                            </svg>
+                            Due: March 15, 2024 at 9:00 AM
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4 lg:mt-0 lg:ml-6 flex flex-col sm:flex-row gap-2">
+                        <button class="bg-wcc-blue hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors inline-flex items-center justify-center">
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                            </svg>
+                            Edit
+                        </button>
+                        <button class="bg-red-100 hover:bg-red-200 text-red-700 border border-red-300 px-4 py-2 rounded-lg text-sm font-medium transition-colors inline-flex items-center justify-center">
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                            </svg>
+                            Delete
+                        </button>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Add New Assessment Button -->
+        <div class="mt-8 text-center">
+            <button class="bg-wcc-blue hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-lg transition-colors duration-200 inline-flex items-center">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                </svg>
+                Add New Assessment
+            </button>
+        </div>
+
+        <!-- Summary Statistics -->
+        <div class="mt-12 grid grid-cols-1 md:grid-cols-4 gap-6">
+            <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200 text-center">
+                <div class="text-2xl font-bold text-gray-900 mb-2">8</div>
+                <div class="text-sm text-gray-600">Total Assessments</div>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200 text-center">
+                <div class="text-2xl font-bold text-red-600 mb-2">2</div>
+                <div class="text-sm text-gray-600">Due This Week</div>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200 text-center">
+                <div class="text-2xl font-bold text-yellow-600 mb-2">3</div>
+                <div class="text-sm text-gray-600">Due Next Week</div>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200 text-center">
+                <div class="text-2xl font-bold text-green-600 mb-2">3</div>
+                <div class="text-sm text-gray-600">Due Later</div>
+            </div>
+        </div>
+    </main>
+
+    {% include 'footer.html' %}
+</body>
+</html>
