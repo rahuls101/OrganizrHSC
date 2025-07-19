@@ -1,4 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
     // ─────────────────────────────────────────────
     // DOM Elements
     // ─────────────────────────────────────────────
@@ -53,7 +55,10 @@ document.addEventListener('DOMContentLoaded', function() {
         updateCreateButtonState();
 
         fetch('/clear-parsed', {
-                method: 'POST'
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': csrfToken
+                }
             })
             .then(res => res.json())
             .then(data => {
@@ -76,7 +81,8 @@ document.addEventListener('DOMContentLoaded', function() {
         fetch('/commit-assessments', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken
                 },
                 body: JSON.stringify({
                     filenames: processedFilenames
@@ -117,6 +123,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
         fetch('/upload', {
                 method: 'POST',
+                headers: {
+                    'X-CSRFToken': csrfToken
+                },
                 body: formData
             })
             .then(res => res.json())

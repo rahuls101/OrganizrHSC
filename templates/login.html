@@ -55,7 +55,8 @@
                 </div>
                 <!-- Login Form -->
                 <div class="bg-white py-8 px-6 shadow-lg rounded-lg border border-gray-200">
-                    <form class="space-y-6" action="#" method="POST">
+                    <form class="space-y-6" action="{{ url_for('login') }}" method="POST">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                         <!-- Email Field -->
                         <div>
                             <label for="email" class="block text-sm font-medium text-gray-700 mb-2">

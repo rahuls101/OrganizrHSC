@@ -4,6 +4,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Your Assessments - WCC Planner</title>
+        <meta name="csrf-token" content="{{ csrf_token() }}">
         <script src="https://cdn.tailwindcss.com"></script>
         <script>
             tailwind.config = {
@@ -141,6 +142,7 @@
                     </div>
                     <!-- Edit Form (Edit Mode) -->
                     <form id="edit-form-{{ loop.index }}-form" action="{{ url_for('edit_assessment') }}" method="POST">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                         <div id="edit-form-{{ loop.index }}" class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hidden">
                             <!-- HIDDEN ID -->
                             <input type="hidden" name="assessment_id" value="{{ a.id }}">
@@ -198,6 +200,7 @@
             </div>
             <!-- Add Assessment Form -->
             <form id="add-form" action="{{ url_for('add_assessment') }}" method="POST" class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mt-4 hidden">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                 <div class="border-t border-gray-200 pt-6">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
@@ -272,6 +275,7 @@
                 <div class="mt-6 flex justify-end gap-3">
                     <button onclick="hideDeleteModal()" class="bg-gray-100 text-gray-800 px-4 py-2 rounded-md hover:bg-gray-200">Cancel</button>
                     <form id="deleteForm" method="POST" action="{{ url_for('delete_assessment') }}">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                         <input type="hidden" name="assessment_id" id="deleteAssessmentId">
                         <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700">Delete</button>
                     </form>

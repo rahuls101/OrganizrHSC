@@ -14,12 +14,14 @@ from schedule_stats import calculate_weekly_stats
 from subject_config import subject_data, name_to_code
 from ics import Calendar, Event
 import pytz
+from flask_wtf import CSRFProtect
 
 
 
 load_dotenv() 
 
 app = Flask(__name__)
+csrf = CSRFProtect(app)
 app.secret_key = os.getenv("SECRET_KEY", "defaultsecretky")
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 
@@ -503,11 +505,11 @@ def add_assessment():
     if 'user_id' not in session:
         return redirect(url_for('login', message='Please log in to continue', type='error'))
 
-    title = request.form.get('title')
-    subject_code = request.form.get('subject_code')
-    description = request.form.get('description')
-    due_date_str = request.form.get('due_date')
-    weighting = request.form.get('weighting', type=int)
+    title = escape(request.form.get('title'))
+    subject_code = escape(request.form.get('subject_code'))
+    description = escape(request.form.get('description'))
+    due_date_str = escape(request.form.get('due_date'))
+    weighting = escape(request.form.get('weighting', type=int))
 
 
     try:

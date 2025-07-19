@@ -1,4 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content'); // ← ADD THIS LINE FIRST
+
     // Elements
     const firstName = document.getElementById("first-name");
     const lastName = document.getElementById("last-name");
@@ -112,6 +114,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
+                    "X-CSRFToken": csrfToken  
                 },
                 body: JSON.stringify({
                     email: emailValue
