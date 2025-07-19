@@ -363,24 +363,43 @@ def assessments():
     user = User.query.get(session['user_id'])
     now = datetime.now()
 
-    assessments = [
-        {
-            "id": a.id,
-            "subject_code": a.subject_code,
-            "title": a.title,
-            "subject": subject_data.get(a.subject_code, {}).get("name", a.subject_code),
-            "subject_colour": subject_data.get(a.subject_code, {}).get("colour", "gray"),
-            "description": a.description,
-            "days_until_due": max((a.due_date - now).days, 0),
-            "due_date_str": a.due_date.strftime("%B %d, %Y at %I:%M %p"),
-            "due_date_input": a.due_date.strftime("%Y-%m-%dT%H:%M")
-        }
-        for a in sorted(user.assessments, key=lambda x: x.due_date)
-        if a.due_date >= now
-    ]
+    
+    formatted_assessments = []
 
-    return render_template('assessments.html', assessments=assessments, subject_data=subject_data)
+    # Sort assessments by due date
+    sorted_assessments = sorted(user.assessments, key=lambda assessment: assessment.due_date)
 
+    # Build list of future assessments
+    for assessment in sorted_assessments:
+        if assessment.due_date >= now:
+            subject_code = assessment.subject_code
+            subject_info = subject_data.get(subject_code, {})
+
+            subject_name = subject_info.get("name", subject_code)
+            subject_colour = subject_info.get("colour", "gray")
+
+            days_until_due = (assessment.due_date - now).days
+            if days_until_due < 0:
+                days_until_due = 0
+
+            due_date_str = assessment.due_date.strftime("%B %d, %Y at %I:%M %p")
+            due_date_input = assessment.due_date.strftime("%Y-%m-%dT%H:%M")
+
+            assessment_entry = {
+                "id": assessment.id,
+                "subject_code": subject_code,
+                "title": assessment.title,
+                "subject": subject_name,
+                "subject_colour": subject_colour,
+                "description": assessment.description,
+                "days_until_due": days_until_due,
+                "due_date_str": due_date_str,
+                "due_date_input": due_date_input
+            }
+
+            formatted_assessments.append(assessment_entry)
+
+    return render_template('assessments.html', assessments=formatted_assessments, subject_data=subject_data)
 
 @app.route('/edit-assessment', methods=['POST'])
 def edit_assessment(): 
@@ -406,15 +425,28 @@ def edit_assessment():
     assessment = Assessment.query.get(assessment_id)
 
     if assessment and assessment.user_id == session['user_id']:
+
+        due_date_changed = (assessment.due_date != due_date)
+
         assessment.title = title
         assessment.subject_code = subject_code
         assessment.description = description
         assessment.due_date = due_date
 
         db.session.commit()
+
+        if due_date_changed: 
+            StudySession.query.filter_by(assessment_id=assessment.id).delete() 
+            db.session.commit()
+
+            #regenerate study sessions 
+            generate_schedule_for_new_assessments(assessment.user_id)
+
+            return redirect(url_for('assessments', message='Due date changed - sessions regenerated.', type='success'))
+
         return redirect(url_for('assessments', message='Assessment updated successfully', type='success'))
     else:
-        return redirect(url_for('assessments', message='Assessment not found or unauthorized', type='error'))
+        return redirect(url_for('assessments', message='Assessment not found', type='error'))
 
 
 if __name__ == '__main__': 
