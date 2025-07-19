@@ -366,12 +366,30 @@ def assessments():
     
     formatted_assessments = []
 
+    #stats counters
+
+    total = 0 
+    due_this_week = 0 
+    due_next_week = 0 
+    due_later = 0 
+
     # Sort assessments by due date
     sorted_assessments = sorted(user.assessments, key=lambda assessment: assessment.due_date)
 
     # Build list of future assessments
     for assessment in sorted_assessments:
         if assessment.due_date >= now:
+            total += 1
+
+            days_until_due = (assessment.due_date - now).days
+
+            if days_until_due <= 7:
+                due_this_week += 1
+            elif days_until_due <= 14:
+                due_next_week += 1
+            else:
+                due_later += 1
+
             subject_code = assessment.subject_code
             subject_info = subject_data.get(subject_code, {})
 
@@ -399,7 +417,10 @@ def assessments():
 
             formatted_assessments.append(assessment_entry)
 
-    return render_template('assessments.html', assessments=formatted_assessments, subject_data=subject_data)
+    assessments_summary = [total, due_this_week, due_next_week, due_later]
+
+
+    return render_template('assessments.html', assessments=formatted_assessments, subject_data=subject_data, assessments_summary = assessments_summary)
 
 @app.route('/edit-assessment', methods=['POST'])
 def edit_assessment(): 
@@ -468,6 +489,37 @@ def delete_assessment():
         return redirect(url_for('assessments', message='Assessment and study sessions deleted.', type='success'))
     
     return redirect(url_for('assessments', message='Assessment not found or unauthorized.', type='error'))
+
+@app.route('/add-assessment', methods=['POST'])
+def add_assessment():
+    if 'user_id' not in session:
+        return redirect(url_for('login', message='Please log in to continue', type='error'))
+
+    title = request.form.get('title')
+    subject_code = request.form.get('subject_code')
+    description = request.form.get('description')
+    due_date_str = request.form.get('due_date')
+
+    try:
+        due_date = datetime.strptime(due_date_str, "%Y-%m-%dT%H:%M")
+    except ValueError:
+        return redirect(url_for('assessments', message='Invalid due date format', type='error'))
+
+    new_assessment = Assessment(
+        user_id=session['user_id'],
+        title=title,
+        subject_code=subject_code,
+        description=description,
+        due_date=due_date
+    )
+
+    db.session.add(new_assessment)
+    db.session.commit()
+
+    # Generate study sessions for new assessment
+    generate_schedule_for_new_assessments(session['user_id'])
+
+    return redirect(url_for('assessments', message='Assessment added successfully', type='success'))
 
 if __name__ == '__main__': 
     app.run(debug=True)
