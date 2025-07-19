@@ -1,171 +1,151 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OrganizrHSC - Study Smarter, Not Harder</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        'wcc-blue': '#1e40af',
-                        'wcc-light-blue': '#3b82f6',
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>OrganizrHSC - Study Smarter, Not Harder</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script>
+            tailwind.config = {
+                theme: {
+                    extend: {
+                        colors: {
+                            'wcc-blue': '#1e40af',
+                            'wcc-light-blue': '#3b82f6',
+                        }
                     }
                 }
             }
-        }
-    </script>
-</head>
-<body class="min-h-screen bg-gray-50">
-
-    <!-- Toast notification -->
-    <div id="toast-message"
-        class="hidden fixed top-5 left-1/2 transform -translate-x-1/2 z-50 max-w-md w-full px-6 py-4 rounded-xl shadow-lg border text-center transition-opacity duration-500">
-        <span id="toast-text" class="text-base font-semibold block"></span>
-    </div>
-
-    <!-- Navigation Header -->
-    <nav class="bg-white border-b border-gray-200 shadow-sm">
-        <div class="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-16">
-                <div class="flex items-center">
-                    <h1 class="text-xl font-bold text-wcc-blue">OrganizrHSC</h1>
-                </div>
-                <div class="hidden space-x-2 md:flex items-center">
-                    <a href="#" class="px-4 py-2 text-wcc-blue font-semibold rounded-lg transition-all duration-200 hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 hover:shadow-md transform hover:-translate-y-0.5 relative overflow-hidden group">
-                        <span class="relative z-10">About</span>
-                        <div class="absolute inset-0 bg-gradient-to-r from-wcc-blue to-blue-600 opacity-0 group-hover:opacity-10 transition-opacity duration-200"></div>
-                    </a>
-                    
-                    <a href="#" class="px-4 py-2 text-wcc-blue font-semibold rounded-lg transition-all duration-200 hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 hover:shadow-md transform hover:-translate-y-0.5 relative overflow-hidden group">
-                        <span class="relative z-10">Contact</span>
-                        <div class="absolute inset-0 bg-gradient-to-r from-wcc-blue to-blue-600 opacity-0 group-hover:opacity-10 transition-opacity duration-200"></div>
-                    </a>
-                    <div class="w-px h-6 bg-gray-300 mx-2"></div>
-
-                    <a href="{{ url_for('login') }}" class="px-4 py-2 font-semibold text-wcc-blue bg-white border-2 border-wcc-blue rounded-lg transition-colors duration-200 shadow-md hover:bg-gray-50 hover:shadow-lg transform hover:-translate-y-0.5">Login</a>
-                    <a href="{{ url_for('signup') }}" class="px-4 py-2 font-semibold text-white bg-wcc-blue border-2 border-wcc-blue rounded-lg transition-colors duration-200 shadow-md hover:bg-blue-700 hover:shadow-lg transform hover:-translate-y-0.5">Sign Up</a>
-                </div>
-            </div>
+        </script>
+    </head>
+    <body class="min-h-screen bg-gray-50">
+        <!-- Toast notification -->
+        <div id="toast-message"
+            class="hidden fixed top-5 left-1/2 transform -translate-x-1/2 z-50 max-w-md w-full px-6 py-4 rounded-xl shadow-lg border text-center transition-opacity duration-500">
+            <span id="toast-text" class="text-base font-semibold block"></span>
         </div>
-    </nav>
-
-    <!-- Main Content -->
-    <main class="flex-1">
-        <!-- Hero Section -->
-        <div class="px-4 py-12 mx-auto max-w-7xl sm:px-6 lg:px-8 lg:py-20">
-            <div class="items-center lg:grid lg:grid-cols-2 lg:gap-12">
-                <!-- Left Column - Content -->
-                <div class="text-center lg:text-left">
-                    <!-- Main Heading -->
-                    <h1 class="mb-6 text-4xl font-bold leading-tight text-gray-900 sm:text-5xl lg:text-6xl">
-                        <span class="text-wcc-blue">Organizr</span>HSC
-                    </h1>
-                    
-                    <!-- Subheading -->
-                    <p class="mb-8 text-xl font-medium text-gray-600 sm:text-2xl">
-                        Study Smarter, Not Harder
-                    </p>
-                    
-                    <!-- Description -->
-                    <p class="max-w-2xl mx-auto mb-10 text-lg text-gray-500 lg:mx-0">
-                        Upload your assessment notification PDFs and get a personalized study schedule. 
-                        Perfect for William Clarke College students who want to stay organized and excel in their studies.
-                    </p>
-                    
-                    <!-- CTA Buttons -->
-                    <div class="flex flex-col justify-center gap-4 sm:flex-row lg:justify-start">
-                        <a href="{{ url_for('signup') }}" class="bg-wcc-blue hover:bg-blue-700 text-white font-semibold py-4 px-8 rounded-lg transition-colors duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
-                            Get Started
-                        </a>
-                    </div>
-                </div>
-                
-                <!-- Right Column - Hero Image -->
-                <div class="mt-12 lg:mt-0">
-                    <div class="relative">
-                        <!-- Placeholder Hero Image -->
-                        <div class="overflow-hidden shadow-2xl bg-gradient-to-br from-blue-100 to-indigo-200 rounded-2xl">
-                            <img src="{{ url_for('static', filename='images/landing-hero.jpg') }}"
-                            alt="Students studying with digital planner" 
-                            class="object-cover w-full h-auto">
-                        </div>
-                        
-                        <!-- Floating Elements for Visual Interest -->
-                        <div class="absolute hidden p-4 bg-white rounded-lg shadow-lg -top-4 -right-4 lg:block">
-                            <div class="flex items-center space-x-2">
-                                <div class="w-3 h-3 bg-green-400 rounded-full"></div>
-                                <span class="text-sm font-medium text-gray-700">Study Schedule Ready</span>
-                            </div>
-                        </div>
-                        
-                        <div class="absolute hidden p-4 bg-white rounded-lg shadow-lg -bottom-4 -left-4 lg:block">
-                            <div class="flex items-center space-x-2">
-                                <div class="w-3 h-3 rounded-full bg-wcc-blue"></div>
-                                <span class="text-sm font-medium text-gray-700">PDF Uploaded</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Features Preview Section -->
-        <div class="py-16 bg-white">
+        <!-- Navigation Header -->
+        <nav class="bg-white border-b border-gray-200 shadow-sm">
             <div class="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
-                <div class="mb-12 text-center">
-                    <h2 class="mb-4 text-3xl font-bold text-gray-900">Why Choose OrganizrHSC?</h2>
-                    <p class="max-w-2xl mx-auto text-lg text-gray-600">
-                        Designed specifically for William Clarke College students to maximize academic success
-                    </p>
-                </div>
-                
-                <div class="grid gap-8 md:grid-cols-3">
-                    <!-- Feature 1 -->
-                    <div class="p-6 text-center">
-                        <div class="flex items-center justify-center w-16 h-16 mx-auto mb-4 bg-blue-100 rounded-full">
-                            <svg class="w-8 h-8 text-wcc-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                            </svg>
-                        </div>
-                        <h3 class="mb-2 text-xl font-semibold text-gray-900">PDF Upload</h3>
-                        <p class="text-gray-600">Simply upload your assessment notification PDFs and let us do the rest</p>
+                <div class="flex items-center justify-between h-16">
+                    <div class="flex items-center">
+                        <h1 class="text-xl font-bold text-wcc-blue">OrganizrHSC</h1>
                     </div>
-                    
-                    <!-- Feature 2 -->
-                    <div class="p-6 text-center">
-                        <div class="flex items-center justify-center w-16 h-16 mx-auto mb-4 bg-blue-100 rounded-full">
-                            <svg class="w-8 h-8 text-wcc-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                            </svg>
-                        </div>
-                        <h3 class="mb-2 text-xl font-semibold text-gray-900">Smart Scheduling</h3>
-                        <p class="text-gray-600">Get personalized study schedules based on your assessment dates</p>
-                    </div>
-                    
-                    <!-- Feature 3 -->
-                    <div class="p-6 text-center">
-                        <div class="flex items-center justify-center w-16 h-16 mx-auto mb-4 bg-blue-100 rounded-full">
-                            <svg class="w-8 h-8 text-wcc-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
-                            </svg>
-                        </div>
-                        <h3 class="mb-2 text-xl font-semibold text-gray-900">Track Progress</h3>
-                        <p class="text-gray-600">Monitor your study progress and stay on top of your academic goals</p>
+                    <div class="hidden space-x-2 md:flex items-center">
+                        <a href="#" class="px-4 py-2 text-wcc-blue font-semibold rounded-lg transition-all duration-200 hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 hover:shadow-md transform hover:-translate-y-0.5 relative overflow-hidden group">
+                            <span class="relative z-10">About</span>
+                            <div class="absolute inset-0 bg-gradient-to-r from-wcc-blue to-blue-600 opacity-0 group-hover:opacity-10 transition-opacity duration-200"></div>
+                        </a>
+                        <a href="#" class="px-4 py-2 text-wcc-blue font-semibold rounded-lg transition-all duration-200 hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 hover:shadow-md transform hover:-translate-y-0.5 relative overflow-hidden group">
+                            <span class="relative z-10">Contact</span>
+                            <div class="absolute inset-0 bg-gradient-to-r from-wcc-blue to-blue-600 opacity-0 group-hover:opacity-10 transition-opacity duration-200"></div>
+                        </a>
+                        <div class="w-px h-6 bg-gray-300 mx-2"></div>
+                        <a href="{{ url_for('login') }}" class="px-4 py-2 font-semibold text-wcc-blue bg-white border-2 border-wcc-blue rounded-lg transition-colors duration-200 shadow-md hover:bg-gray-50 hover:shadow-lg transform hover:-translate-y-0.5">Login</a>
+                        <a href="{{ url_for('signup') }}" class="px-4 py-2 font-semibold text-white bg-wcc-blue border-2 border-wcc-blue rounded-lg transition-colors duration-200 shadow-md hover:bg-blue-700 hover:shadow-lg transform hover:-translate-y-0.5">Sign Up</a>
                     </div>
                 </div>
             </div>
-        </div>
-
-    </main>
-
-    {% include 'footer.html' %}
-
-
-<!-- Toast notification script -->
-<script src="{{ url_for('static', filename='js/toast.js') }}"></script>
-
-</body>
+        </nav>
+        <!-- Main Content -->
+        <main class="flex-1">
+            <!-- Hero Section -->
+            <div class="px-4 py-12 mx-auto max-w-7xl sm:px-6 lg:px-8 lg:py-20">
+                <div class="items-center lg:grid lg:grid-cols-2 lg:gap-12">
+                    <!-- Left Column - Content -->
+                    <div class="text-center lg:text-left">
+                        <!-- Main Heading -->
+                        <h1 class="mb-6 text-4xl font-bold leading-tight text-gray-900 sm:text-5xl lg:text-6xl">
+                            <span class="text-wcc-blue">Organizr</span>HSC
+                        </h1>
+                        <!-- Subheading -->
+                        <p class="mb-8 text-xl font-medium text-gray-600 sm:text-2xl">
+                            Study Smarter, Not Harder
+                        </p>
+                        <!-- Description -->
+                        <p class="max-w-2xl mx-auto mb-10 text-lg text-gray-500 lg:mx-0">
+                            Upload your assessment notification PDFs and get a personalized study schedule. 
+                            Perfect for William Clarke College students who want to stay organized and excel in their studies.
+                        </p>
+                        <!-- CTA Buttons -->
+                        <div class="flex flex-col justify-center gap-4 sm:flex-row lg:justify-start">
+                            <a href="{{ url_for('signup') }}" class="bg-wcc-blue hover:bg-blue-700 text-white font-semibold py-4 px-8 rounded-lg transition-colors duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
+                            Get Started
+                            </a>
+                        </div>
+                    </div>
+                    <!-- Right Column - Hero Image -->
+                    <div class="mt-12 lg:mt-0">
+                        <div class="relative">
+                            <!-- Placeholder Hero Image -->
+                            <div class="overflow-hidden shadow-2xl bg-gradient-to-br from-blue-100 to-indigo-200 rounded-2xl">
+                                <img src="{{ url_for('static', filename='images/landing-hero.jpg') }}"
+                                    alt="Students studying with digital planner" 
+                                    class="object-cover w-full h-auto">
+                            </div>
+                            <!-- Floating Elements for Visual Interest -->
+                            <div class="absolute hidden p-4 bg-white rounded-lg shadow-lg -top-4 -right-4 lg:block">
+                                <div class="flex items-center space-x-2">
+                                    <div class="w-3 h-3 bg-green-400 rounded-full"></div>
+                                    <span class="text-sm font-medium text-gray-700">Study Schedule Ready</span>
+                                </div>
+                            </div>
+                            <div class="absolute hidden p-4 bg-white rounded-lg shadow-lg -bottom-4 -left-4 lg:block">
+                                <div class="flex items-center space-x-2">
+                                    <div class="w-3 h-3 rounded-full bg-wcc-blue"></div>
+                                    <span class="text-sm font-medium text-gray-700">PDF Uploaded</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Features Preview Section -->
+            <div class="py-16 bg-white">
+                <div class="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
+                    <div class="mb-12 text-center">
+                        <h2 class="mb-4 text-3xl font-bold text-gray-900">Why Choose OrganizrHSC?</h2>
+                        <p class="max-w-2xl mx-auto text-lg text-gray-600">
+                            Designed specifically for William Clarke College students to maximize academic success
+                        </p>
+                    </div>
+                    <div class="grid gap-8 md:grid-cols-3">
+                        <!-- Feature 1 -->
+                        <div class="p-6 text-center">
+                            <div class="flex items-center justify-center w-16 h-16 mx-auto mb-4 bg-blue-100 rounded-full">
+                                <svg class="w-8 h-8 text-wcc-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                </svg>
+                            </div>
+                            <h3 class="mb-2 text-xl font-semibold text-gray-900">PDF Upload</h3>
+                            <p class="text-gray-600">Simply upload your assessment notification PDFs and let us do the rest</p>
+                        </div>
+                        <!-- Feature 2 -->
+                        <div class="p-6 text-center">
+                            <div class="flex items-center justify-center w-16 h-16 mx-auto mb-4 bg-blue-100 rounded-full">
+                                <svg class="w-8 h-8 text-wcc-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                </svg>
+                            </div>
+                            <h3 class="mb-2 text-xl font-semibold text-gray-900">Smart Scheduling</h3>
+                            <p class="text-gray-600">Get personalized study schedules based on your assessment dates</p>
+                        </div>
+                        <!-- Feature 3 -->
+                        <div class="p-6 text-center">
+                            <div class="flex items-center justify-center w-16 h-16 mx-auto mb-4 bg-blue-100 rounded-full">
+                                <svg class="w-8 h-8 text-wcc-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                                </svg>
+                            </div>
+                            <h3 class="mb-2 text-xl font-semibold text-gray-900">Track Progress</h3>
+                            <p class="text-gray-600">Monitor your study progress and stay on top of your academic goals</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        {% include 'footer.html' %}
+        <!-- Toast notification script -->
+        <script src="{{ url_for('static', filename='js/toast.js') }}"></script>
+    </body>
 </html>

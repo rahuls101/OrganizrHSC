@@ -1,160 +1,148 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - OrganizrHSC</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        'wcc-blue': '#1e40af',
-                        'wcc-light-blue': '#3b82f6',
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Login - OrganizrHSC</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script>
+            tailwind.config = {
+                theme: {
+                    extend: {
+                        colors: {
+                            'wcc-blue': '#1e40af',
+                            'wcc-light-blue': '#3b82f6',
+                        }
                     }
                 }
             }
-        }
-    </script>
-</head>
-<body class="bg-gray-50 min-h-screen flex flex-col">
-
-    <!-- Toast notification -->
-    <div id="toast-message"
-        class="hidden fixed top-5 left-1/2 transform -translate-x-1/2 z-50 max-w-md w-full px-6 py-4 rounded-xl shadow-lg border text-center transition-opacity duration-500">
-        <span id="toast-text" class="text-base font-semibold block"></span>
-    </div>
-
-    <!-- Navigation Header -->
-    <nav class="bg-white shadow-sm border-b border-gray-200">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-16">
-                <div class="flex items-center">
-                    <h1 class="text-xl font-bold text-wcc-blue hover:text-blue-700 transition-colors">
-                        OrganizrHSC
-                    </h1>
-                </div>
-                <div class="flex items-center space-x-4">
-                    <a href="{{ url_for('landing') }}" class="text-gray-600 hover:text-wcc-blue transition-colors">
-                        Back to Landing
-                    </a>
-                </div>
-            </div>
+        </script>
+    </head>
+    <body class="bg-gray-50 min-h-screen flex flex-col">
+        <!-- Toast notification -->
+        <div id="toast-message"
+            class="hidden fixed top-5 left-1/2 transform -translate-x-1/2 z-50 max-w-md w-full px-6 py-4 rounded-xl shadow-lg border text-center transition-opacity duration-500">
+            <span id="toast-text" class="text-base font-semibold block"></span>
         </div>
-    </nav>
-
-    <!-- Main Content -->
-    <main class="flex-1 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-        <div class="max-w-md w-full space-y-8">
-            <!-- Header -->
-            <div class="text-center">
-                <h2 class="text-3xl font-bold text-gray-900 mb-2">
-                    Welcome Back
-                </h2>
-                <p class="text-gray-600">
-                    Log in to your OrganizrHSC account
-                </p>
+        <!-- Navigation Header -->
+        <nav class="bg-white shadow-sm border-b border-gray-200">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between items-center h-16">
+                    <div class="flex items-center">
+                        <h1 class="text-xl font-bold text-wcc-blue hover:text-blue-700 transition-colors">
+                            OrganizrHSC
+                        </h1>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <a href="{{ url_for('landing') }}" class="text-gray-600 hover:text-wcc-blue transition-colors">
+                        Back to Landing
+                        </a>
+                    </div>
+                </div>
             </div>
-
-            <!-- Login Form -->
-            <div class="bg-white py-8 px-6 shadow-lg rounded-lg border border-gray-200">
-                <form class="space-y-6" action="#" method="POST">
-                    <!-- Email Field -->
-                    <div>
-                        <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
-                            Email Address
-                        </label>
-                        <input 
-                            id="email" 
-                            name="email" 
-                            type="email" 
-                            autocomplete="email" 
-                            required 
-                            class="w-full px-3 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-wcc-blue focus:border-wcc-blue transition-colors"
-                            placeholder="Enter your email"
-                        >
-                    </div>
-
-                    <!-- Password Field -->
-                    <div>
-                        <label for="password" class="block text-sm font-medium text-gray-700 mb-2">
-                            Password
-                        </label>
-                        <input 
-                            id="password" 
-                            name="password" 
-                            type="password" 
-                            autocomplete="current-password" 
-                            required 
-                            class="w-full px-3 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-wcc-blue focus:border-wcc-blue transition-colors"
-                            placeholder="Enter your password"
-                        >
-                    </div>
-
-                    <!-- Remember Me & Forgot Password -->
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center">
-                            <input 
-                                id="remember-me" 
-                                name="remember-me" 
-                                type="checkbox" 
-                                class="h-4 w-4 text-wcc-blue focus:ring-wcc-blue border-gray-300 rounded"
-                            >
-                            <label for="remember-me" class="ml-2 block text-sm text-gray-700">
-                                Remember me
-                            </label>
-                        </div>
-                        <div class="text-sm">
-                            <a href="#" class="text-red-600 hover:text-blue-700 font-medium transition-colors">
-                                Forgot password?
-                            </a>
-                        </div>
-                    </div>
-
-                    <!-- Submit Button -->
-                    <div>
-                        <button 
-                            type="submit" 
-                            class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-wcc-blue hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-wcc-blue transition-colors duration-200 transform hover:-translate-y-0.5"
-                        >
-                            Log In
-                        </button>
-                    </div>
-                </form>
-            </div>
-
-            <!-- Sign Up Link -->
-            <div class="text-center">
-                <p class="text-sm text-gray-600">
-                    Don't have an account?
-                    <a href="{{ url_for('signup') }}" class="font-medium text-wcc-blue hover:text-blue-700 transition-colors">
-                        Sign up here
-                    </a>
-                </p>
-            </div>
-
-            <!-- For WCC Students Info Bar
-            <div class="text-center">
-                <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                    <div class="flex items-center justify-center mb-2">
-                        <svg class="w-5 h-5 text-wcc-blue mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                        </svg>
-                        <span class="text-sm font-medium text-wcc-blue">For WCC Students</span>
-                    </div>
-                    <p class="text-xs text-gray-600">
-                        Use your William Clarke College email address to access all features
+        </nav>
+        <!-- Main Content -->
+        <main class="flex-1 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+            <div class="max-w-md w-full space-y-8">
+                <!-- Header -->
+                <div class="text-center">
+                    <h2 class="text-3xl font-bold text-gray-900 mb-2">
+                        Welcome Back
+                    </h2>
+                    <p class="text-gray-600">
+                        Log in to your OrganizrHSC account
                     </p>
                 </div>
-            </div> -->
-        </div>
-    </main>
-
-    {% include 'footer.html' %}
-
-<!-- Toast notification script -->
-<script src="{{ url_for('static', filename='js/toast.js') }}"></script>
-
-</body>
+                <!-- Login Form -->
+                <div class="bg-white py-8 px-6 shadow-lg rounded-lg border border-gray-200">
+                    <form class="space-y-6" action="#" method="POST">
+                        <!-- Email Field -->
+                        <div>
+                            <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
+                            Email Address
+                            </label>
+                            <input 
+                                id="email" 
+                                name="email" 
+                                type="email" 
+                                autocomplete="email" 
+                                required 
+                                class="w-full px-3 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-wcc-blue focus:border-wcc-blue transition-colors"
+                                placeholder="Enter your email"
+                                >
+                        </div>
+                        <!-- Password Field -->
+                        <div>
+                            <label for="password" class="block text-sm font-medium text-gray-700 mb-2">
+                            Password
+                            </label>
+                            <input 
+                                id="password" 
+                                name="password" 
+                                type="password" 
+                                autocomplete="current-password" 
+                                required 
+                                class="w-full px-3 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-wcc-blue focus:border-wcc-blue transition-colors"
+                                placeholder="Enter your password"
+                                >
+                        </div>
+                        <!-- Remember Me & Forgot Password -->
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center">
+                                <input 
+                                    id="remember-me" 
+                                    name="remember-me" 
+                                    type="checkbox" 
+                                    class="h-4 w-4 text-wcc-blue focus:ring-wcc-blue border-gray-300 rounded"
+                                    >
+                                <label for="remember-me" class="ml-2 block text-sm text-gray-700">
+                                Remember me
+                                </label>
+                            </div>
+                            <div class="text-sm">
+                                <a href="#" class="text-red-600 hover:text-blue-700 font-medium transition-colors">
+                                Forgot password?
+                                </a>
+                            </div>
+                        </div>
+                        <!-- Submit Button -->
+                        <div>
+                            <button 
+                                type="submit" 
+                                class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-wcc-blue hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-wcc-blue transition-colors duration-200 transform hover:-translate-y-0.5"
+                                >
+                            Log In
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                <!-- Sign Up Link -->
+                <div class="text-center">
+                    <p class="text-sm text-gray-600">
+                        Don't have an account?
+                        <a href="{{ url_for('signup') }}" class="font-medium text-wcc-blue hover:text-blue-700 transition-colors">
+                        Sign up here
+                        </a>
+                    </p>
+                </div>
+                <!-- For WCC Students Info Bar
+                    <div class="text-center">
+                        <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                            <div class="flex items-center justify-center mb-2">
+                                <svg class="w-5 h-5 text-wcc-blue mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                <span class="text-sm font-medium text-wcc-blue">For WCC Students</span>
+                            </div>
+                            <p class="text-xs text-gray-600">
+                                Use your William Clarke College email address to access all features
+                            </p>
+                        </div>
+                    </div> -->
+            </div>
+        </main>
+        {% include 'footer.html' %}
+        <!-- Toast notification script -->
+        <script src="{{ url_for('static', filename='js/toast.js') }}"></script>
+    </body>
 </html>

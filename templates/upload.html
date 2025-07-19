@@ -1,212 +1,184 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Upload PDF - OrganizrHSC</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        'wcc-blue': '#1e40af',
-                        'wcc-light-blue': '#3b82f6',
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Upload PDF - OrganizrHSC</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script>
+            tailwind.config = {
+                theme: {
+                    extend: {
+                        colors: {
+                            'wcc-blue': '#1e40af',
+                            'wcc-light-blue': '#3b82f6',
+                        }
                     }
                 }
             }
-        }
-    </script>
-</head>
-<body class="bg-gray-50 min-h-screen">
-
-    <!-- Navbar -->
-    <nav class="bg-white border-gray-200 border-b shadow-sm px-4 lg:px-6 py-2.5">
-        <div class="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl">
-            
-            <h1 class="flex items-center">
-                <span class="text-xl font-bold text-wcc-blue">OrganizrHSC</span>
-            </h1>
-
-            <div class="justify-between items-center w-full lg:flex lg:w-auto lg:order-1">
-                <div class="flex flex-col mt-4 font-medium lg:flex-row lg:space-x-8 lg:mt-0">
-                    
-                    <a href="{{ url_for('dashboard') }}" class="px-4 py-2 text-wcc-blue font-semibold rounded-lg transition-all duration-200 hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 hover:shadow-md transform hover:-translate-y-0.5 relative overflow-hidden group">
-                        <span class="relative z-10">Dashboard</span>
-                        <div class="absolute inset-0 bg-gradient-to-r from-wcc-blue to-blue-600 opacity-0 group-hover:opacity-10 transition-opacity duration-200"></div>
-                    </a>
-
-                    <a 
-                        href="{{ url_for('upload') }}" 
-                        aria-current="page"
-                        class="px-4 py-2 text-white font-bold rounded-lg bg-gradient-to-r from-wcc-blue to-blue-600 shadow-md border border-blue-500 cursor-default pointer-events-none">
+        </script>
+    </head>
+    <body class="bg-gray-50 min-h-screen">
+        <!-- Navbar -->
+        <nav class="bg-white border-gray-200 border-b shadow-sm px-4 lg:px-6 py-2.5">
+            <div class="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl">
+                <h1 class="flex items-center">
+                    <span class="text-xl font-bold text-wcc-blue">OrganizrHSC</span>
+                </h1>
+                <div class="justify-between items-center w-full lg:flex lg:w-auto lg:order-1">
+                    <div class="flex flex-col mt-4 font-medium lg:flex-row lg:space-x-8 lg:mt-0">
+                        <a href="{{ url_for('dashboard') }}" class="px-4 py-2 text-wcc-blue font-semibold rounded-lg transition-all duration-200 hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 hover:shadow-md transform hover:-translate-y-0.5 relative overflow-hidden group">
+                            <span class="relative z-10">Dashboard</span>
+                            <div class="absolute inset-0 bg-gradient-to-r from-wcc-blue to-blue-600 opacity-0 group-hover:opacity-10 transition-opacity duration-200"></div>
+                        </a>
+                        <a 
+                            href="{{ url_for('upload') }}" 
+                            aria-current="page"
+                            class="px-4 py-2 text-white font-bold rounded-lg bg-gradient-to-r from-wcc-blue to-blue-600 shadow-md border border-blue-500 cursor-default pointer-events-none">
                         <span class="relative z-10">Upload</span>
-                    </a>
-
-                    <a href="{{ url_for('assessments') }}" class="px-4 py-2 text-wcc-blue font-semibold rounded-lg transition-all duration-200 hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 hover:shadow-md transform hover:-translate-y-0.5 relative overflow-hidden group">
-                        <span class="relative z-10">Assessments</span>
-                        <div class="absolute inset-0 bg-gradient-to-r from-wcc-blue to-blue-600 opacity-0 group-hover:opacity-10 transition-opacity duration-200"></div>
-                    </a>
-                    
-                    <a href="{{ url_for('schedule') }}" class="px-4 py-2 text-wcc-blue font-semibold rounded-lg transition-all duration-200 hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 hover:shadow-md transform hover:-translate-y-0.5 relative overflow-hidden group">
-                        <span class="relative z-10">Schedule</span>
-                        <div class="absolute inset-0 bg-gradient-to-r from-wcc-blue to-blue-600 opacity-0 group-hover:opacity-10 transition-opacity duration-200"></div>
-                    </a>
-                    
-                </div>
-            </div>
-
-            <div class="flex items-center lg:order-2">
-                <a 
-                    href="{{ url_for('logout') }}" class="px-4 py-2 font-semibold text-red-600 bg-red-100 border-2 border-red-200 rounded-lg transition-colors duration-200 shadow-md hover:bg-gray-50 hover:shadow-lg transform hover:-translate-y-0.5">Log out
-                </a>
-
-            </div>
-        </div>
-    </nav>
-
-    <!-- Main Content -->
-    <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <!-- Header Section -->
-        <div class="mb-8">
-            <h1 class="text-3xl font-bold text-gray-900 mb-2">Upload Assessment PDF</h1>
-            <p class="text-gray-600">Upload your assessment notification PDFs to generate a personalized study schedule</p>
-        </div>
-
-        <!-- Upload Section -->
-        <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-8">
-            <!-- Drag and Drop Area -->
-            <div class="border-2 border-dashed border-gray-300 rounded-lg p-12 text-center hover:border-wcc-blue hover:bg-blue-50 transition-colors duration-200">
-                <div class="flex flex-col items-center">
-                    <!-- Upload Icon -->
-                    <svg class="w-16 h-16 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
-                    </svg>
-                    
-                    <!-- Upload Text -->
-                    <h3 class="text-lg font-medium text-gray-900 mb-2">Drop your PDF files here</h3>
-                    <p class="text-gray-500 mb-4">or click to browse and select files</p>
-                    
-                    <!-- File Input (Hidden) -->
-                    <input type="file" id="file-upload" class="hidden" accept=".pdf" multiple>
-                    
-                    <!-- Upload Button -->
-                    <label for="file-upload" class="bg-wcc-blue hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-lg cursor-pointer transition-colors duration-200 inline-flex items-center">
-                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                        </svg>
-                        Choose Files
-                    </label>
-                    
-                    <!-- File Type Info -->
-                    <p class="text-xs text-gray-400 mt-4">Supported format: PDF (Max size: 10MB per file)</p>
-
-                    <!-- File Type Error Banner -->
-                        <div id="file-error-banner" class="hidden mt-4 text-sm text-red-600 bg-red-100 px-4 py-2 rounded-md"></div>
-                </div>
-            </div>
-
-            <!-- File Preview Section -->
-            <div class="mt-8">
-                <h3 class="text-lg font-medium text-gray-900 mb-4">Selected Files</h3>
-                
-                <!-- Sample File Preview -->
-                <div id="file-preview-container" class="space-y-3">
-                    <!-- Empty State (when no files) -->
-                    <div class="text-center py-8 text-gray-500">
-                        <svg class="w-12 h-12 mx-auto mb-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                        </svg>
-                        <p class="text-sm">No files selected yet</p>
+                        </a>
+                        <a href="{{ url_for('assessments') }}" class="px-4 py-2 text-wcc-blue font-semibold rounded-lg transition-all duration-200 hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 hover:shadow-md transform hover:-translate-y-0.5 relative overflow-hidden group">
+                            <span class="relative z-10">Assessments</span>
+                            <div class="absolute inset-0 bg-gradient-to-r from-wcc-blue to-blue-600 opacity-0 group-hover:opacity-10 transition-opacity duration-200"></div>
+                        </a>
+                        <a href="{{ url_for('schedule') }}" class="px-4 py-2 text-wcc-blue font-semibold rounded-lg transition-all duration-200 hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 hover:shadow-md transform hover:-translate-y-0.5 relative overflow-hidden group">
+                            <span class="relative z-10">Schedule</span>
+                            <div class="absolute inset-0 bg-gradient-to-r from-wcc-blue to-blue-600 opacity-0 group-hover:opacity-10 transition-opacity duration-200"></div>
+                        </a>
                     </div>
-
+                </div>
+                <div class="flex items-center lg:order-2">
+                    <a 
+                        href="{{ url_for('logout') }}" class="px-4 py-2 font-semibold text-red-600 bg-red-100 border-2 border-red-200 rounded-lg transition-colors duration-200 shadow-md hover:bg-gray-50 hover:shadow-lg transform hover:-translate-y-0.5">Log out
+                    </a>
                 </div>
             </div>
-
-            <!-- Action Buttons -->
-            <div class="mt-8 flex flex-col sm:flex-row gap-4">
-                <button id="create-assessments-btn" class="bg-gray-300 text-white font-medium py-3 px-6 rounded-lg transition-colors duration-200 flex items-center justify-center cursor-not-allowed" disabled>
-                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
-                    </svg>
-                    Create Assessments
-                </button>
-                <button id="clear-all-btn" class="bg-white hover:bg-gray-50 text-gray-700 border border-gray-300 font-medium py-3 px-6 rounded-lg transition-colors duration-200">
+        </nav>
+        <!-- Main Content -->
+        <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <!-- Header Section -->
+            <div class="mb-8">
+                <h1 class="text-3xl font-bold text-gray-900 mb-2">Upload Assessment PDF</h1>
+                <p class="text-gray-600">Upload your assessment notification PDFs to generate a personalized study schedule</p>
+            </div>
+            <!-- Upload Section -->
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-8">
+                <!-- Drag and Drop Area -->
+                <div class="border-2 border-dashed border-gray-300 rounded-lg p-12 text-center hover:border-wcc-blue hover:bg-blue-50 transition-colors duration-200">
+                    <div class="flex flex-col items-center">
+                        <!-- Upload Icon -->
+                        <svg class="w-16 h-16 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                        </svg>
+                        <!-- Upload Text -->
+                        <h3 class="text-lg font-medium text-gray-900 mb-2">Drop your PDF files here</h3>
+                        <p class="text-gray-500 mb-4">or click to browse and select files</p>
+                        <!-- File Input (Hidden) -->
+                        <input type="file" id="file-upload" class="hidden" accept=".pdf" multiple>
+                        <!-- Upload Button -->
+                        <label for="file-upload" class="bg-wcc-blue hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-lg cursor-pointer transition-colors duration-200 inline-flex items-center">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                            </svg>
+                            Choose Files
+                        </label>
+                        <!-- File Type Info -->
+                        <p class="text-xs text-gray-400 mt-4">Supported format: PDF (Max size: 10MB per file)</p>
+                        <!-- File Type Error Banner -->
+                        <div id="file-error-banner" class="hidden mt-4 text-sm text-red-600 bg-red-100 px-4 py-2 rounded-md"></div>
+                    </div>
+                </div>
+                <!-- File Preview Section -->
+                <div class="mt-8">
+                    <h3 class="text-lg font-medium text-gray-900 mb-4">Selected Files</h3>
+                    <!-- Sample File Preview -->
+                    <div id="file-preview-container" class="space-y-3">
+                        <!-- Empty State (when no files) -->
+                        <div class="text-center py-8 text-gray-500">
+                            <svg class="w-12 h-12 mx-auto mb-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                            </svg>
+                            <p class="text-sm">No files selected yet</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Action Buttons -->
+                <div class="mt-8 flex flex-col sm:flex-row gap-4">
+                    <button id="create-assessments-btn" class="bg-gray-300 text-white font-medium py-3 px-6 rounded-lg transition-colors duration-200 flex items-center justify-center cursor-not-allowed" disabled>
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                        </svg>
+                        Create Assessments
+                    </button>
+                    <button id="clear-all-btn" class="bg-white hover:bg-gray-50 text-gray-700 border border-gray-300 font-medium py-3 px-6 rounded-lg transition-colors duration-200">
                     Clear All
-                </button>
-            </div>
-        </div>
-
-        <!-- Sent assessments to backend message - hidden by default -->
-        <div id="upload-success-banner" class="mt-6 bg-green-50 border border-green-200 rounded-lg p-4 hidden">
-            <div class="flex items-center">
-                <svg class="w-5 h-5 text-green-600 mr-3" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
-                </svg>
-                <div>
-                    <h4 class="text-sm font-medium text-green-800">Upload Successful!</h4>
-                    <p id="upload-committed-count" class="text-sm text-green-700 mt-1">Your assessment PDFs have been processed.</p>
+                    </button>
                 </div>
             </div>
-            <div class="mt-4">
-                <a href="{{ url_for('dashboard') }}" class="bg-green-600 hover:bg-green-700 text-white text-sm font-medium py-2 px-4 rounded-lg transition-colors duration-200 inline-flex items-center">
-                    View Dashboard
-                    <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                    </svg>
-                </a>
-                <a href="{{ url_for('schedule') }}" class="bg-green-600 hover:bg-green-700 text-white text-sm font-medium py-2 px-4 rounded-lg transition-colors duration-200 inline-flex items-center">
-                    View Study Schedule
-                    <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                    </svg>
-                </a>
-            </div>
-        </div>
-
-        <!-- Error Message (Hidden by default) -->
-        <div id="upload-error-banner" class="mt-6 bg-red-50 border border-red-200 rounded-lg p-4 hidden">
-            <div class="flex items-center">
-                <svg class="w-5 h-5 text-red-600 mr-3" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
-                </svg>
-                <div>
-                    <h4 class="text-sm font-medium text-red-800">Upload Failed</h4>
-                    <p class="text-sm text-red-700 mt-1">There was an error processing your files. Please check the file format and try again.</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Upload Instructions -->
-        <div class="mt-8 bg-blue-50 border border-blue-200 rounded-lg p-6">
-            <h3 class="text-lg font-medium text-blue-900 mb-4">Upload Instructions</h3>
-            <div class="space-y-3 text-sm text-blue-800">
-                <div class="flex items-start">
-                    <svg class="w-5 h-5 text-blue-600 mr-3 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+            <!-- Sent assessments to backend message - hidden by default -->
+            <div id="upload-success-banner" class="mt-6 bg-green-50 border border-green-200 rounded-lg p-4 hidden">
+                <div class="flex items-center">
+                    <svg class="w-5 h-5 text-green-600 mr-3" fill="currentColor" viewBox="0 0 20 20">
                         <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
                     </svg>
-                    <p>Upload assessment notification PDFs</p>
+                    <div>
+                        <h4 class="text-sm font-medium text-green-800">Upload Successful!</h4>
+                        <p id="upload-committed-count" class="text-sm text-green-700 mt-1">Your assessment PDFs have been processed.</p>
+                    </div>
                 </div>
-                <div class="flex items-start">
-                    <svg class="w-5 h-5 text-blue-600 mr-3 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
-                    </svg>
-                    <p>Our AI will extract assessment dates, subjects, and requirements</p>
-                </div>
-                <div class="flex items-start">
-                    <svg class="w-5 h-5 text-blue-600 mr-3 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
-                    </svg>
-                    <p>Files must be PDFs</p>
+                <div class="mt-4">
+                    <a href="{{ url_for('dashboard') }}" class="bg-green-600 hover:bg-green-700 text-white text-sm font-medium py-2 px-4 rounded-lg transition-colors duration-200 inline-flex items-center">
+                        View Dashboard
+                        <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                        </svg>
+                    </a>
+                    <a href="{{ url_for('schedule') }}" class="bg-green-600 hover:bg-green-700 text-white text-sm font-medium py-2 px-4 rounded-lg transition-colors duration-200 inline-flex items-center">
+                        View Study Schedule
+                        <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                        </svg>
+                    </a>
                 </div>
             </div>
-        </div>
-    </main>
-
-    {% include 'footer.html' %}
-
-    
-    <script src="{{ url_for('static', filename='js/upload.js') }}"></script>
-
-</body>
+            <!-- Error Message (Hidden by default) -->
+            <div id="upload-error-banner" class="mt-6 bg-red-50 border border-red-200 rounded-lg p-4 hidden">
+                <div class="flex items-center">
+                    <svg class="w-5 h-5 text-red-600 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
+                    </svg>
+                    <div>
+                        <h4 class="text-sm font-medium text-red-800">Upload Failed</h4>
+                        <p class="text-sm text-red-700 mt-1">There was an error processing your files. Please check the file format and try again.</p>
+                    </div>
+                </div>
+            </div>
+            <!-- Upload Instructions -->
+            <div class="mt-8 bg-blue-50 border border-blue-200 rounded-lg p-6">
+                <h3 class="text-lg font-medium text-blue-900 mb-4">Upload Instructions</h3>
+                <div class="space-y-3 text-sm text-blue-800">
+                    <div class="flex items-start">
+                        <svg class="w-5 h-5 text-blue-600 mr-3 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                        </svg>
+                        <p>Upload assessment notification PDFs</p>
+                    </div>
+                    <div class="flex items-start">
+                        <svg class="w-5 h-5 text-blue-600 mr-3 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                        </svg>
+                        <p>Our AI will extract assessment dates, subjects, and requirements</p>
+                    </div>
+                    <div class="flex items-start">
+                        <svg class="w-5 h-5 text-blue-600 mr-3 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                        </svg>
+                        <p>Files must be PDFs</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+        {% include 'footer.html' %}
+        <script src="{{ url_for('static', filename='js/upload.js') }}"></script>
+    </body>
 </html>
