@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', function() {
     // ─────────────────────────────────────────────
     // DOM Elements
     // ─────────────────────────────────────────────
@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // ─────────────────────────────────────────────
     // File Input Change Handler
     // ─────────────────────────────────────────────
-    fileInput.addEventListener('change', function () {
+    fileInput.addEventListener('change', function() {
         let addedPDF = false;
         const newFiles = [];
 
@@ -52,7 +52,9 @@ document.addEventListener('DOMContentLoaded', function () {
         showEmptyState();
         updateCreateButtonState();
 
-        fetch('/clear-parsed', { method: 'POST' })
+        fetch('/clear-parsed', {
+                method: 'POST'
+            })
             .then(res => res.json())
             .then(data => {
                 if (!data) console.error('Failed to clear parsed assessments from session');
@@ -72,10 +74,14 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         fetch('/commit-assessments', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ filenames: processedFilenames })
-        })
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    filenames: processedFilenames
+                })
+            })
             .then(res => res.json())
             .then(data => {
                 if (data.success) {
@@ -109,7 +115,10 @@ document.addEventListener('DOMContentLoaded', function () {
         const formData = new FormData();
         for (const file of files) formData.append('file', file);
 
-        fetch('/upload', { method: 'POST', body: formData })
+        fetch('/upload', {
+                method: 'POST',
+                body: formData
+            })
             .then(res => res.json())
             .then(results => {
                 for (const file of files) {

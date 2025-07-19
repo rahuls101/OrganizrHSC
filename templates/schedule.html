@@ -1,216 +1,197 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Study Schedule - OrganizrHSC</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        'wcc-blue': '#1e40af',
-                        'wcc-light-blue': '#3b82f6',
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Study Schedule - OrganizrHSC</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script>
+            tailwind.config = {
+                theme: {
+                    extend: {
+                        colors: {
+                            'wcc-blue': '#1e40af',
+                            'wcc-light-blue': '#3b82f6',
+                        }
                     }
                 }
             }
-        }
-    </script>
-</head>
-<body class="bg-gray-50 min-h-screen">
-
-    <!-- Toast notification -->
-    <div id="toast-message"
-        class="hidden fixed top-5 left-1/2 transform -translate-x-1/2 z-50 max-w-md w-full px-6 py-4 rounded-xl shadow-lg border text-center transition-opacity duration-500">
-        <span id="toast-text" class="text-base font-semibold block"></span>
-    </div>
-
-    <!-- Navbar -->
-    <nav class="bg-white border-gray-200 border-b shadow-sm px-4 lg:px-6 py-2.5">
-        <div class="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl">
-            
-            <h1 class="flex items-center">
-                <span class="text-xl font-bold text-wcc-blue">OrganizrHSC</span>
-            </h1>
-
-            <div class="justify-between items-center w-full lg:flex lg:w-auto lg:order-1">
-                <div class="flex flex-col mt-4 font-medium lg:flex-row lg:space-x-8 lg:mt-0">
-                    
-                    <a href="{{ url_for('dashboard') }}" class="px-4 py-2 text-wcc-blue font-semibold rounded-lg transition-all duration-200 hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 hover:shadow-md transform hover:-translate-y-0.5 relative overflow-hidden group">
-                        <span class="relative z-10">Dashboard</span>
-                        <div class="absolute inset-0 bg-gradient-to-r from-wcc-blue to-blue-600 opacity-0 group-hover:opacity-10 transition-opacity duration-200"></div>
-                    </a>
-
-                    <a href="{{ url_for('upload') }}" class="px-4 py-2 text-wcc-blue font-semibold rounded-lg transition-all duration-200 hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 hover:shadow-md transform hover:-translate-y-0.5 relative overflow-hidden group">
-                        <span class="relative z-10">Upload</span>
-                        <div class="absolute inset-0 bg-gradient-to-r from-wcc-blue to-blue-600 opacity-0 group-hover:opacity-10 transition-opacity duration-200"></div>
-                    </a>
-                    
-                    <a 
-                        href="{{ url_for('schedule') }}" 
-                        aria-current="page"
-                        class="px-4 py-2 text-white font-bold rounded-lg bg-gradient-to-r from-wcc-blue to-blue-600 shadow-md border border-blue-500 cursor-default pointer-events-none">
+        </script>
+    </head>
+    <body class="bg-gray-50 min-h-screen">
+        <!-- Toast notification -->
+        <div id="toast-message"
+            class="hidden fixed top-5 left-1/2 transform -translate-x-1/2 z-50 max-w-md w-full px-6 py-4 rounded-xl shadow-lg border text-center transition-opacity duration-500">
+            <span id="toast-text" class="text-base font-semibold block"></span>
+        </div>
+        <!-- Navbar -->
+        <nav class="bg-white border-gray-200 border-b shadow-sm px-4 lg:px-6 py-2.5">
+            <div class="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl">
+                <h1 class="flex items-center">
+                    <span class="text-xl font-bold text-wcc-blue">OrganizrHSC</span>
+                </h1>
+                <div class="justify-between items-center w-full lg:flex lg:w-auto lg:order-1">
+                    <div class="flex flex-col mt-4 font-medium lg:flex-row lg:space-x-8 lg:mt-0">
+                        <a href="{{ url_for('dashboard') }}" class="px-4 py-2 text-wcc-blue font-semibold rounded-lg transition-all duration-200 hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 hover:shadow-md transform hover:-translate-y-0.5 relative overflow-hidden group">
+                            <span class="relative z-10">Dashboard</span>
+                            <div class="absolute inset-0 bg-gradient-to-r from-wcc-blue to-blue-600 opacity-0 group-hover:opacity-10 transition-opacity duration-200"></div>
+                        </a>
+                        <a href="{{ url_for('upload') }}" class="px-4 py-2 text-wcc-blue font-semibold rounded-lg transition-all duration-200 hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 hover:shadow-md transform hover:-translate-y-0.5 relative overflow-hidden group">
+                            <span class="relative z-10">Upload</span>
+                            <div class="absolute inset-0 bg-gradient-to-r from-wcc-blue to-blue-600 opacity-0 group-hover:opacity-10 transition-opacity duration-200"></div>
+                        </a>
+                        <a href="{{ url_for('assessments') }}" class="px-4 py-2 text-wcc-blue font-semibold rounded-lg transition-all duration-200 hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 hover:shadow-md transform hover:-translate-y-0.5 relative overflow-hidden group">
+                            <span class="relative z-10">Assessments</span>
+                            <div class="absolute inset-0 bg-gradient-to-r from-wcc-blue to-blue-600 opacity-0 group-hover:opacity-10 transition-opacity duration-200"></div>
+                        </a>
+                        <a 
+                            href="{{ url_for('schedule') }}" 
+                            aria-current="page"
+                            class="px-4 py-2 text-white font-bold rounded-lg bg-gradient-to-r from-wcc-blue to-blue-600 shadow-md border border-blue-500 cursor-default pointer-events-none">
                         <span class="relative z-10">Schedule</span>
+                        </a>
+                    </div>
+                </div>
+                <div class="flex items-center lg:order-2">
+                    <a 
+                        href="{{ url_for('logout') }}" class="px-4 py-2 font-semibold text-red-600 bg-red-100 border-2 border-red-200 rounded-lg transition-colors duration-200 shadow-md hover:bg-gray-50 hover:shadow-lg transform hover:-translate-y-0.5">Log out
                     </a>
-                    
                 </div>
             </div>
-
-            <div class="flex items-center lg:order-2">
-                <a 
-                    href="{{ url_for('logout') }}" class="px-4 py-2 font-semibold text-red-600 bg-red-100 border-2 border-red-200 rounded-lg transition-colors duration-200 shadow-md hover:bg-gray-50 hover:shadow-lg transform hover:-translate-y-0.5">Log out
-                </a>
-
-            </div>
-        </div>
-    </nav>
-
-    <!-- Main Content -->
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <!-- Header Section -->
-        <div class="mb-8">
-            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
-                <div>
-                    <h1 class="text-3xl font-bold text-gray-900 mb-2">Study Schedule</h1>
-                    <p class="text-gray-600">Your personalized weekly study plan</p>
-                </div>
-                <div class="mt-4 sm:mt-0 flex space-x-3">
-                    <a href="{{ url_for('schedule', week=week_offset - 1) }}">
+        </nav>
+        <!-- Main Content -->
+        <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <!-- Header Section -->
+            <div class="mb-8">
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+                    <div>
+                        <h1 class="text-3xl font-bold text-gray-900 mb-2">Study Schedule</h1>
+                        <p class="text-gray-600">Your personalized weekly study plan</p>
+                    </div>
+                    <div class="mt-4 sm:mt-0 flex space-x-3">
+                        <a href="{{ url_for('schedule', week=week_offset - 1) }}">
                         <button class="bg-white hover:bg-gray-50 text-gray-700 border border-gray-300 px-4 py-2 rounded-lg text-sm font-medium transition-colors">
-                            Previous Week
+                        Previous Week
                         </button>
-                    </a>
-                    <a href="{{ url_for('schedule', week=week_offset + 1) }}">
+                        </a>
+                        <a href="{{ url_for('schedule', week=week_offset + 1) }}">
                         <button class="bg-white hover:bg-gray-50 text-gray-700 border border-gray-300 px-4 py-2 rounded-lg text-sm font-medium transition-colors">
-                            Next Week
+                        Next Week
                         </button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <!-- Week Navigation -->
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-6">
+                <div class="flex items-center justify-between">
+                    <!-- Left Arrow = Previous Week -->
+                    <a href="{{ url_for('schedule', week=week_offset - 1) }}" class="p-2 hover:bg-gray-100 rounded-lg transition-colors">
+                        <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                        </svg>
+                    </a>
+                    <!-- Week Date Range -->
+                    <h2 class="text-lg font-semibold text-gray-900">
+                        {{ week_start.strftime('%B %d') }} - {{ (week_start + timedelta(days=6)).strftime('%B %d, %Y') }}
+                    </h2>
+                    <!-- Right Arrow = Next Week -->
+                    <a href="{{ url_for('schedule', week=week_offset + 1) }}" class="p-2 hover:bg-gray-100 rounded-lg transition-colors">
+                        <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                        </svg>
                     </a>
                 </div>
             </div>
-        </div>
-
-        <!-- Week Navigation -->
-        <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-6">
-            <div class="flex items-center justify-between">
-                <!-- Left Arrow = Previous Week -->
-                <a href="{{ url_for('schedule', week=week_offset - 1) }}" class="p-2 hover:bg-gray-100 rounded-lg transition-colors">
-                    <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
-                    </svg>
-                </a>
-
-                <!-- Week Date Range -->
-                <h2 class="text-lg font-semibold text-gray-900">
-                    {{ week_start.strftime('%B %d') }} - {{ (week_start + timedelta(days=6)).strftime('%B %d, %Y') }}
-                </h2>
-
-                <!-- Right Arrow = Next Week -->
-                <a href="{{ url_for('schedule', week=week_offset + 1) }}" class="p-2 hover:bg-gray-100 rounded-lg transition-colors">
-                    <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                    </svg>
-                </a>
-            </div>
-        </div>
-
-
-        <!-- Weekly Calendar Grid -->
-        <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
-            <!-- Calendar Header -->
-            <div class="grid grid-cols-8 border-b border-gray-200">
-                <div class="p-4 bg-gray-50 border-r border-gray-200">
-                    <span class="text-sm font-medium text-gray-500">Time</span>
-                </div>
-                {% for i in range(7) %}
+            <!-- Weekly Calendar Grid -->
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+                <!-- Calendar Header -->
+                <div class="grid grid-cols-8 border-b border-gray-200">
+                    <div class="p-4 bg-gray-50 border-r border-gray-200">
+                        <span class="text-sm font-medium text-gray-500">Time</span>
+                    </div>
+                    {% for i in range(7) %}
                     {% set date = week_start + timedelta(days=i) %}
                     <div class="p-4 bg-gray-50 border-r border-gray-200 text-center">
                         <div class="text-sm font-medium text-gray-900">{{ date.strftime('%A') }}</div>
                         <div class="text-xs text-gray-500">{{ date.strftime('%b %d') }}</div>
                     </div>
-                {% endfor %}
-            </div>
-
-            <!-- Calendar Body -->
-            <div class="divide-y divide-gray-200">
-                {% for hour in [7, 9, 11, 13, 15, 17, 19, 21] %}
+                    {% endfor %}
+                </div>
+                <!-- Calendar Body -->
+                <div class="divide-y divide-gray-200">
+                    {% for hour in [7, 9, 11, 13, 15, 17, 19, 21] %}
                     <div class="grid grid-cols-8 min-h-16">
-                    <!-- Time Label -->
-                    <div class="p-4 bg-gray-50 border-r border-gray-200 flex items-center">
-                        <span class="text-sm text-gray-600">
-                        {% if hour < 12 %}
+                        <!-- Time Label -->
+                        <div class="p-4 bg-gray-50 border-r border-gray-200 flex items-center">
+                            <span class="text-sm text-gray-600">
+                            {% if hour < 12 %}
                             {{ hour }}:00 AM
-                        {% elif hour == 12 %}
+                            {% elif hour == 12 %}
                             12:00 PM
-                        {% else %}
+                            {% else %}
                             {{ hour - 12 }}:00 PM
-                        {% endif %}
-                        </span>
-                    </div>
-
-                    <!-- Day Columns -->
-                    {% for i in range(7) %}
+                            {% endif %}
+                            </span>
+                        </div>
+                        <!-- Day Columns -->
+                        {% for i in range(7) %}
                         {% set date = week_start + timedelta(days=i) %}
                         <div class="p-2 border-r border-gray-200">
-                        {% set sessions = session_map.get((date, hour), []) %}
-                        {% for session in sessions %}
+                            {% set sessions = session_map.get((date, hour), []) %}
+                            {% for session in sessions %}
                             {% set colour = subject_colours.get(session.assessment.subject_code, 'gray') %}
                             {% set code = session.assessment.subject_code %}
                             {% set name = subject_names.get(code, code) %}
                             <div class="bg-{{ colour }}-100 border border-{{ colour }}-200 rounded-lg p-2 mb-1">
-                            <div class="text-xs font-medium text-{{ colour }}-800">{{ name }}</div>
-                            <div class="text-xs text-{{ colour }}-600">{{ session.assessment.title }}</div>
-                            <div class="text-xs text-{{ colour }}-500 mt-1">2 hours</div>
+                                <div class="text-xs font-medium text-{{ colour }}-800">{{ name }}</div>
+                                <div class="text-xs text-{{ colour }}-600">{{ session.assessment.title }}</div>
+                                <div class="text-xs text-{{ colour }}-500 mt-1">2 hours</div>
                             </div>
-                        {% endfor %}
+                            {% endfor %}
                         </div>
+                        {% endfor %}
+                    </div>
                     {% endfor %}
-                    </div>
-                {% endfor %}
-            </div>
-            
-            
-        </div>
-
-        <div class="mt-4 mb-6 text-center">
-            <a href="{{ url_for('export_calendar') }}"
-            class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-xl shadow inline-block">
-                📅 Download Full Study Calendar (.ics)
-            </a>
-        </div>
-
-        <!-- Study Summary -->
-        <div class="mt-8 grid md:grid-cols-2 gap-6">
-            <!-- Weekly Summary -->
-            <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                <h3 class="text-lg font-semibold text-gray-900 mb-4">Weekly Summary</h3>
-                <div class="space-y-3">
-                    <div class="flex justify-between items-center">
-                        <span class="text-sm text-gray-600">Total Planned Study Hours</span>
-                        <span class="text-sm font-medium text-gray-900">
-                            {{ weekly_summary.total_hours }} hours
-                        </span>
-                    </div>
-                    <div class="flex justify-between items-center">
-                        <span class="text-sm text-gray-600">Sessions Planned</span>
-                        <span class="text-sm font-medium text-gray-900">
-                            {{ weekly_summary.total_sessions}}
-                        </span>
-                    </div>
-                    <div class="flex justify-between items-center">
-                        <span class="text-sm text-gray-600">Most Studied Subject</span>
-                        <span class="text-sm font-medium text-gray-900">
-                            {{ subject_names.get(weekly_summary.most_subject, 'N/A') }}
-                        </span>
-                    </div>
                 </div>
             </div>
-
-            <!-- Subject Breakdown -->
-            <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                <h3 class="text-lg font-semibold text-gray-900 mb-4">Subject Breakdown</h3>
-                <div class="space-y-3">
-                    {% for code, hours in weekly_summary.subject_breakdown.items() %}
+            <div class="mt-4 mb-6 text-center">
+                <a href="{{ url_for('export_calendar') }}"
+                    class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-xl shadow inline-block">
+                📅 Download Full Study Calendar (.ics)
+                </a>
+            </div>
+            <!-- Study Summary -->
+            <div class="mt-8 grid md:grid-cols-2 gap-6">
+                <!-- Weekly Summary -->
+                <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Weekly Summary</h3>
+                    <div class="space-y-3">
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm text-gray-600">Total Planned Study Hours</span>
+                            <span class="text-sm font-medium text-gray-900">
+                            {{ weekly_summary.total_hours }} hours
+                            </span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm text-gray-600">Sessions Planned</span>
+                            <span class="text-sm font-medium text-gray-900">
+                            {{ weekly_summary.total_sessions}}
+                            </span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm text-gray-600">Most Studied Subject</span>
+                            <span class="text-sm font-medium text-gray-900">
+                            {{ subject_names.get(weekly_summary.most_subject, 'N/A') }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <!-- Subject Breakdown -->
+                <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Subject Breakdown</h3>
+                    <div class="space-y-3">
+                        {% for code, hours in weekly_summary.subject_breakdown.items() %}
                         {% set colour = subject_colours.get(code, 'gray') %}
                         {% set label = subject_names.get(code, 'Other') %}
                         <div class="flex items-center justify-between">
@@ -220,16 +201,13 @@
                             </div>
                             <span class="text-sm font-medium text-gray-900">{{ hours }} hours</span>
                         </div>
-                    {% endfor %}
+                        {% endfor %}
+                    </div>
                 </div>
             </div>
-        </div>
-    </main>
-
-    {% include 'footer.html' %}
-
-<!-- Toast/notification script -->
-<script src="{{ url_for('static', filename='js/toast.js') }}"></script>  
-
-</body>
+        </main>
+        {% include 'footer.html' %}
+        <!-- Toast/notification script -->
+        <script src="{{ url_for('static', filename='js/toast.js') }}"></script>  
+    </body>
 </html>

@@ -75,7 +75,7 @@ document.addEventListener("DOMContentLoaded", () => {
     firstName.addEventListener("input", () => {
         const value = firstName.value
 
-        if (value.length > 25){
+        if (value.length > 25) {
             showError(firstName, errors["first-name"], "Must be 25 characters or fewer");
             valid["first-name"] = false;
         } else if (!hasValidNameCharacters(value)) {
@@ -92,7 +92,7 @@ document.addEventListener("DOMContentLoaded", () => {
     lastName.addEventListener("input", () => {
         const value = lastName.value
 
-        if (value.length > 25){
+        if (value.length > 25) {
             showError(lastName, errors["last-name"], "Must be 25 characters or fewer");
             valid["last-name"] = false;
         } else if (!hasValidNameCharacters(value)) {
@@ -105,27 +105,29 @@ document.addEventListener("DOMContentLoaded", () => {
         updateSubmitState();
     });
 
-    
+
     // Debounced backend check
     const debouncedCheckEmailBackend = debounce((emailValue) => {
         fetch("/check_email", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ email: emailValue }),
-        })
-        .then((response) => response.json())
-        .then((data) => {
-            if (data.exists) {
-                showError(email, errors["email"], `Email already in use. <a href="${loginUrl}" class="text-blue-700 underline hover:text-blue-900">Login</a>?`);
-                valid["email"] = false;
-            } else {
-                hideError(email, errors["email"]);
-                valid["email"] = true;
-            }
-            updateSubmitState();
-        });
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    email: emailValue
+                }),
+            })
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.exists) {
+                    showError(email, errors["email"], `Email already in use. <a href="${loginUrl}" class="text-blue-700 underline hover:text-blue-900">Login</a>?`);
+                    valid["email"] = false;
+                } else {
+                    hideError(email, errors["email"]);
+                    valid["email"] = true;
+                }
+                updateSubmitState();
+            });
     }, 500);
 
     // Listener that always runs

@@ -61,6 +61,20 @@ def extract_title(pdf):
 def extract_description(pdf): 
     return 'Placeholder description'
 
+def extract_weighting(pdf): 
+    text_instances = pdf.search_for('Weighting')
+    for inst in text_instances:
+        extended_rect = fitz.Rect(inst.x1, inst.y0, inst.x1 + 200, inst.y1)
+        weighting = pdf.get_text("text", clip=extended_rect).strip()
+        
+        weighting = str(weighting)
+        
+        weighting = int(weighting.replace('%', ''))
+
+        return weighting if weighting else False
+
+    return False 
+
 # -----------------------------
 # Main processor
 # -----------------------------
@@ -80,12 +94,13 @@ def process_file(file, upload_folder):
     title = extract_title(page)
     due_date = extract_due_date(page)
     description = extract_description(page)
+    weighting = extract_weighting(page)
 
     doc.close()
     os.remove(filepath)
 
     
-    if not subject_code or not title or not due_date or not description: 
+    if not subject_code or not title or not due_date or not description or not weighting: 
         return False
     
     return {
@@ -94,5 +109,6 @@ def process_file(file, upload_folder):
         'subject_code': subject_code, 
         'title': title, 
         'description': description, 
-        'due_date': due_date.isoformat()
+        'due_date': due_date.isoformat(),
+        'weighting': weighting
     }

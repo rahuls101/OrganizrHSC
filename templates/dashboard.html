@@ -1,190 +1,177 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - OrganizrHSC</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        'wcc-blue': '#1e40af',
-                        'wcc-light-blue': '#3b82f6',
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Dashboard - OrganizrHSC</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script>
+            tailwind.config = {
+                theme: {
+                    extend: {
+                        colors: {
+                            'wcc-blue': '#1e40af',
+                            'wcc-light-blue': '#3b82f6',
+                        }
                     }
                 }
             }
-        }
-    </script>
-</head>
-<body class="bg-gray-50 min-h-screen">
-
-    <!-- Toast notification -->
-    <div id="toast-message"
-        class="hidden fixed top-5 left-1/2 transform -translate-x-1/2 z-50 max-w-md w-full px-6 py-4 rounded-xl shadow-lg border text-center transition-opacity duration-500">
-        <span id="toast-text" class="text-base font-semibold block"></span>
-    </div>
-
-    <!-- Navbar -->
-    <nav class="bg-white border-gray-200 border-b shadow-sm px-4 lg:px-6 py-2.5">
-        <div class="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl">
-            
-            <h1 class="flex items-center">
-                <span class="text-xl font-bold text-wcc-blue">OrganizrHSC</span>
-            </h1>
-
-            <div class="justify-between items-center w-full lg:flex lg:w-auto lg:order-1">
-                <div class="flex flex-col mt-4 font-medium lg:flex-row lg:space-x-8 lg:mt-0">
-                    <a 
-                        href="{{ url_for('dashboard') }}" 
-                        aria-current="page"
-                        class="px-4 py-2 text-white font-bold rounded-lg bg-gradient-to-r from-wcc-blue to-blue-600 shadow-md border border-blue-500 cursor-default pointer-events-none">
+        </script>
+    </head>
+    <body class="bg-gray-50 min-h-screen">
+        <!-- Toast notification -->
+        <div id="toast-message"
+            class="hidden fixed top-5 left-1/2 transform -translate-x-1/2 z-50 max-w-md w-full px-6 py-4 rounded-xl shadow-lg border text-center transition-opacity duration-500">
+            <span id="toast-text" class="text-base font-semibold block"></span>
+        </div>
+        <!-- Navbar -->
+        <nav class="bg-white border-gray-200 border-b shadow-sm px-4 lg:px-6 py-2.5">
+            <div class="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl">
+                <h1 class="flex items-center">
+                    <span class="text-xl font-bold text-wcc-blue">OrganizrHSC</span>
+                </h1>
+                <div class="justify-between items-center w-full lg:flex lg:w-auto lg:order-1">
+                    <div class="flex flex-col mt-4 font-medium lg:flex-row lg:space-x-8 lg:mt-0">
+                        <a 
+                            href="{{ url_for('dashboard') }}" 
+                            aria-current="page"
+                            class="px-4 py-2 text-white font-bold rounded-lg bg-gradient-to-r from-wcc-blue to-blue-600 shadow-md border border-blue-500 cursor-default pointer-events-none">
                         <span class="relative z-10">Dashboard</span>
+                        </a>
+                        <a href="{{ url_for('upload') }}" class="px-4 py-2 text-wcc-blue font-semibold rounded-lg transition-all duration-200 hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 hover:shadow-md transform hover:-translate-y-0.5 relative overflow-hidden group">
+                            <span class="relative z-10">Upload</span>
+                            <div class="absolute inset-0 bg-gradient-to-r from-wcc-blue to-blue-600 opacity-0 group-hover:opacity-10 transition-opacity duration-200"></div>
+                        </a>
+                        <a href="{{ url_for('assessments') }}" class="px-4 py-2 text-wcc-blue font-semibold rounded-lg transition-all duration-200 hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 hover:shadow-md transform hover:-translate-y-0.5 relative overflow-hidden group">
+                            <span class="relative z-10">Assessments</span>
+                            <div class="absolute inset-0 bg-gradient-to-r from-wcc-blue to-blue-600 opacity-0 group-hover:opacity-10 transition-opacity duration-200"></div>
+                        </a>
+                        <a href="{{ url_for('schedule') }}" class="px-4 py-2 text-wcc-blue font-semibold rounded-lg transition-all duration-200 hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 hover:shadow-md transform hover:-translate-y-0.5 relative overflow-hidden group">
+                            <span class="relative z-10">Schedule</span>
+                            <div class="absolute inset-0 bg-gradient-to-r from-wcc-blue to-blue-600 opacity-0 group-hover:opacity-10 transition-opacity duration-200"></div>
+                        </a>
+                    </div>
+                </div>
+                <div class="flex items-center lg:order-2">
+                    <a 
+                        href="{{ url_for('logout') }}" class="px-4 py-2 font-semibold text-red-600 bg-red-100 border-2 border-red-200 rounded-lg transition-colors duration-200 shadow-md hover:bg-gray-50 hover:shadow-lg transform hover:-translate-y-0.5">Log out
                     </a>
-
-                    <a href="{{ url_for('upload') }}" class="px-4 py-2 text-wcc-blue font-semibold rounded-lg transition-all duration-200 hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 hover:shadow-md transform hover:-translate-y-0.5 relative overflow-hidden group">
-                        <span class="relative z-10">Upload</span>
-                        <div class="absolute inset-0 bg-gradient-to-r from-wcc-blue to-blue-600 opacity-0 group-hover:opacity-10 transition-opacity duration-200"></div>
-                    </a>
-                    
-                    <a href="{{ url_for('schedule') }}" class="px-4 py-2 text-wcc-blue font-semibold rounded-lg transition-all duration-200 hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 hover:shadow-md transform hover:-translate-y-0.5 relative overflow-hidden group">
-                        <span class="relative z-10">Schedule</span>
-                        <div class="absolute inset-0 bg-gradient-to-r from-wcc-blue to-blue-600 opacity-0 group-hover:opacity-10 transition-opacity duration-200"></div>
-                    </a>
-                    
                 </div>
             </div>
-
-            <div class="flex items-center lg:order-2">
-                <a 
-                    href="{{ url_for('logout') }}" class="px-4 py-2 font-semibold text-red-600 bg-red-100 border-2 border-red-200 rounded-lg transition-colors duration-200 shadow-md hover:bg-gray-50 hover:shadow-lg transform hover:-translate-y-0.5">Log out
+        </nav>
+        <!-- Main Content -->
+        <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <!-- Welcome Section -->
+            <div class="mb-8">
+                <h1 class="text-3xl font-bold text-gray-900 mb-2">Hi {{ user.firstname }}!👋</h1>
+                <p class="text-gray-600">Welcome back to your study dashboard. Here's what's coming up.</p>
+            </div>
+            <!-- Quick Actions -->
+            <div class="grid md:grid-cols-2 gap-4 mb-8">
+                <a href="{{ url_for('upload') }}" class="bg-wcc-blue hover:bg-blue-700 text-white p-6 rounded-lg shadow-lg transition-all duration-200 transform hover:-translate-y-1 hover:shadow-xl">
+                    <div class="flex items-center">
+                        <svg class="w-8 h-8 mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                        </svg>
+                        <div>
+                            <h3 class="text-lg font-semibold">Upload PDF</h3>
+                            <p class="text-blue-100">Add new assessment notifications</p>
+                        </div>
+                    </div>
                 </a>
-
-            </div>
-        </div>
-    </nav>
-
-    <!-- Main Content -->
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <!-- Welcome Section -->
-        <div class="mb-8">
-            <h1 class="text-3xl font-bold text-gray-900 mb-2">Hi {{ user.firstname }}!👋</h1>
-            <p class="text-gray-600">Welcome back to your study dashboard. Here's what's coming up.</p>
-        </div>
-
-        <!-- Quick Actions -->
-        <div class="grid md:grid-cols-2 gap-4 mb-8">
-            <a href="{{ url_for('upload') }}" class="bg-wcc-blue hover:bg-blue-700 text-white p-6 rounded-lg shadow-lg transition-all duration-200 transform hover:-translate-y-1 hover:shadow-xl">
-                <div class="flex items-center">
-                    <svg class="w-8 h-8 mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
-                    </svg>
-                    <div>
-                        <h3 class="text-lg font-semibold">Upload PDF</h3>
-                        <p class="text-blue-100">Add new assessment notifications</p>
-                    </div>
-                </div>
-            </a>
-            
-            <a href="{{ url_for('schedule') }}" class="bg-green-600 hover:bg-green-700 text-white p-6 rounded-lg shadow-lg transition-all duration-200 transform hover:-translate-y-1 hover:shadow-xl">
-                <div class="flex items-center">
-                    <svg class="w-8 h-8 mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                    </svg>
-                    <div>
-                        <h3 class="text-lg font-semibold">View Study Schedule</h3>
-                        <p class="text-green-100">Check your personalized study plan</p>
-                    </div>
-                </div>
-            </a>
-        </div>
-
-        <!-- Stats Overview -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-                <div class="flex items-center">
-                    <div class="p-2 bg-blue-100 rounded-lg">
-                        <svg class="w-6 h-6 text-wcc-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                <a href="{{ url_for('schedule') }}" class="bg-green-600 hover:bg-green-700 text-white p-6 rounded-lg shadow-lg transition-all duration-200 transform hover:-translate-y-1 hover:shadow-xl">
+                    <div class="flex items-center">
+                        <svg class="w-8 h-8 mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                         </svg>
+                        <div>
+                            <h3 class="text-lg font-semibold">View Study Schedule</h3>
+                            <p class="text-green-100">Check your personalized study plan</p>
+                        </div>
                     </div>
-                    <div class="ml-4">
-                        <p class="text-sm font-medium text-gray-600">Total Assessments</p>
-                        <p class="text-2xl font-bold text-gray-900">{{ sorted_assessments|length }}</p>
+                </a>
+            </div>
+            <!-- Stats Overview -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                    <div class="flex items-center">
+                        <div class="p-2 bg-blue-100 rounded-lg">
+                            <svg class="w-6 h-6 text-wcc-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                            </svg>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-sm font-medium text-gray-600">Total Assessments</p>
+                            <p class="text-2xl font-bold text-gray-900">{{ sorted_assessments|length }}</p>
+                        </div>
                     </div>
                 </div>
-            </div>
-            
-            <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-                <div class="flex items-center">
-                    <div class="p-2 bg-yellow-100 rounded-lg">
-                        <svg class="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                        </svg>
-                    </div>
-                    <div class="ml-4">
-                        <p class="text-sm font-medium text-gray-600">Upcoming This Week</p>
-                        <p class="text-2xl font-bold text-gray-900">{{ num_close_assessments }}</p>
+                <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                    <div class="flex items-center">
+                        <div class="p-2 bg-yellow-100 rounded-lg">
+                            <svg class="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-sm font-medium text-gray-600">Upcoming This Week</p>
+                            <p class="text-2xl font-bold text-gray-900">{{ num_close_assessments }}</p>
+                        </div>
                     </div>
                 </div>
-            </div>
-            
-            <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-                <div class="flex items-center">
-                    <div class="p-2 bg-green-100 rounded-lg">
-                        <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                        </svg>
-                    </div>
-                    <div class="ml-4">
-                        <p class="text-sm font-medium text-gray-600">Next Assessment In</p>
-                        {% if sorted_assessments %}
+                <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                    <div class="flex items-center">
+                        <div class="p-2 bg-green-100 rounded-lg">
+                            <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                            </svg>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-sm font-medium text-gray-600">Next Assessment In</p>
+                            {% if sorted_assessments %}
                             {% set days = (sorted_assessments[0].due_date - now).days %}
                             <p class="text-2xl font-bold text-gray-900">
                                 {% if days == 0 %}
-                                    Today
+                                Today
                                 {% elif days == 1 %}
-                                    1 day
+                                1 day
                                 {% else %}
-                                    {{ days }} days
+                                {{ days }} days
                                 {% endif %}
                             </p>
-                        {% else %}
+                            {% else %}
                             <p class="text-2xl font-bold text-gray-500">No upcoming</p>
-                        {% endif %}
+                            {% endif %}
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-
-        <!-- Upcoming Assessments -->
-        <div class="bg-white rounded-lg shadow-sm border border-gray-200">
-            <div class="px-6 py-4 border-b border-gray-200">
-                <h2 class="text-xl font-semibold text-gray-900">Upcoming Assessments</h2>
-                <p class="text-sm text-gray-600">Your next assessments and deadlines</p>
-            </div>
-            
-            <div class="divide-y divide-gray-200">
-                {% for assessment in sorted_assessments[:5] %}
+            <!-- Upcoming Assessments -->
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+                <div class="px-6 py-4 border-b border-gray-200">
+                    <h2 class="text-xl font-semibold text-gray-900">Upcoming Assessments</h2>
+                    <p class="text-sm text-gray-600">Your next assessments and deadlines</p>
+                </div>
+                <div class="divide-y divide-gray-200">
+                    {% for assessment in sorted_assessments[:5] %}
                     {% set days_remaining = (assessment.due_date - now).days %}
                     {% if days_remaining == 0 %}
-                        {% set color_text = "text-red-600" %}
-                        {% set color_bg = "bg-red-100" %}
-                        {% set due_text = "Due today" %}
+                    {% set color_text = "text-red-600" %}
+                    {% set color_bg = "bg-red-100" %}
+                    {% set due_text = "Due today" %}
                     {% elif days_remaining <= 3 %}
-                        {% set color_text = "text-red-600" %}
-                        {% set color_bg = "bg-red-100" %}
-                        {% set due_text = "Due in " ~ days_remaining ~ " day" ~ ("s" if days_remaining != 1 else "") %}
+                    {% set color_text = "text-red-600" %}
+                    {% set color_bg = "bg-red-100" %}
+                    {% set due_text = "Due in " ~ days_remaining ~ " day" ~ ("s" if days_remaining != 1 else "") %}
                     {% elif days_remaining <= 7 %}
-                        {% set color_text = "text-yellow-600" %}
-                        {% set color_bg = "bg-yellow-100" %}
-                        {% set due_text = "Due in 1 week" %}
+                    {% set color_text = "text-yellow-600" %}
+                    {% set color_bg = "bg-yellow-100" %}
+                    {% set due_text = "Due in 1 week" %}
                     {% else %}
-                        {% set color_text = "text-gray-600" %}
-                        {% set color_bg = "bg-gray-100" %}
-                        {% set due_text = "Due in " ~ days_remaining ~ " days" %}
+                    {% set color_text = "text-gray-600" %}
+                    {% set color_bg = "bg-gray-100" %}
+                    {% set due_text = "Due in " ~ days_remaining ~ " days" %}
                     {% endif %}
                     <div class="p-6 hover:bg-gray-50 transition-colors">
                         <div class="flex items-center justify-between">
@@ -208,40 +195,36 @@
                             </div>
                         </div>
                     </div>
-                {% else %}
+                    {% else %}
                     <div class="p-6 text-gray-500">No upcoming assessments.</div>
-                {% endfor %}
-
-            </div>
-
-            <!-- Toggle to show more assessments --> 
-
-            <div class="px-6 py-4 bg-gray-50 border-t border-gray-200">
-                <button id="toggleAllBtn" class="text-wcc-blue hover:text-blue-700 font-medium text-sm transition-colors focus:outline-none">
+                    {% endfor %}
+                </div>
+                <!-- Toggle to show more assessments --> 
+                <div class="px-6 py-4 bg-gray-50 border-t border-gray-200">
+                    <button id="toggleAllBtn" class="text-wcc-blue hover:text-blue-700 font-medium text-sm transition-colors focus:outline-none">
                     See all assessments
-                </button>
-            </div>
-            
-            <!-- Hidden container for remaining assessments -->
-            <div id="allAssessments" class="hidden divide-y divide-gray-200">
-                {% for assessment in sorted_assessments[5:] %}
+                    </button>
+                </div>
+                <!-- Hidden container for remaining assessments -->
+                <div id="allAssessments" class="hidden divide-y divide-gray-200">
+                    {% for assessment in sorted_assessments[5:] %}
                     {% set days_remaining = (assessment.due_date - now).days %}
                     {% if days_remaining == 0 %}
-                        {% set color_text = "text-red-600" %}
-                        {% set color_bg = "bg-red-100" %}
-                        {% set due_text = "Due today" %}
+                    {% set color_text = "text-red-600" %}
+                    {% set color_bg = "bg-red-100" %}
+                    {% set due_text = "Due today" %}
                     {% elif days_remaining <= 3 %}
-                        {% set color_text = "text-red-600" %}
-                        {% set color_bg = "bg-red-100" %}
-                        {% set due_text = "Due in " ~ days_remaining ~ " day" ~ ("s" if days_remaining != 1 else "") %}
+                    {% set color_text = "text-red-600" %}
+                    {% set color_bg = "bg-red-100" %}
+                    {% set due_text = "Due in " ~ days_remaining ~ " day" ~ ("s" if days_remaining != 1 else "") %}
                     {% elif days_remaining <= 7 %}
-                        {% set color_text = "text-yellow-600" %}
-                        {% set color_bg = "bg-yellow-100" %}
-                        {% set due_text = "Due in 1 week" %}
+                    {% set color_text = "text-yellow-600" %}
+                    {% set color_bg = "bg-yellow-100" %}
+                    {% set due_text = "Due in 1 week" %}
                     {% else %}
-                        {% set color_text = "text-gray-600" %}
-                        {% set color_bg = "bg-gray-100" %}
-                        {% set due_text = "Due in " ~ days_remaining ~ " days" %}
+                    {% set color_text = "text-gray-600" %}
+                    {% set color_bg = "bg-gray-100" %}
+                    {% set due_text = "Due in " ~ days_remaining ~ " days" %}
                     {% endif %}
                     <div class="p-6 hover:bg-gray-50 transition-colors">
                         <div class="flex items-center justify-between">
@@ -264,56 +247,46 @@
                             </div>
                         </div>
                     </div>
-                {% endfor %}
+                    {% endfor %}
+                </div>
             </div>
-
-        </div> 
-
-        <!-- Upcoming Sessions -->
-        <div class="mt-8 bg-white rounded-lg shadow-sm border border-gray-200">
-            <div class="px-6 py-4 border-b border-gray-200">
-                <h2 class="text-xl font-semibold text-gray-900">Upcoming Sessions</h2>
-            </div>
-            <div class="p-6">
-                {% if upcoming_sessions %}
+            <!-- Upcoming Sessions -->
+            <div class="mt-8 bg-white rounded-lg shadow-sm border border-gray-200">
+                <div class="px-6 py-4 border-b border-gray-200">
+                    <h2 class="text-xl font-semibold text-gray-900">Upcoming Sessions</h2>
+                </div>
+                <div class="p-6">
+                    {% if upcoming_sessions %}
                     <div class="space-y-4">
                         {% for session in upcoming_sessions %}
-                            <div class="flex items-center">
-                                <div class="w-2 h-2 bg-{{ session.subject_colour }}-500 rounded-full mr-3"></div>
-                                <p class="text-sm text-gray-600">
-                                    <span class="font-medium">{{ session.subject_name }}</span> @ {{ session.time }}:00
-                                </p>
-                                <span class="ml-auto text-xs text-gray-400">{{ session.date.strftime('%b %d, %Y') }}</span>
-                            </div>
+                        <div class="flex items-center">
+                            <div class="w-2 h-2 bg-{{ session.subject_colour }}-500 rounded-full mr-3"></div>
+                            <p class="text-sm text-gray-600">
+                                <span class="font-medium">{{ session.subject_name }}</span> @ {{ session.time }}:00
+                            </p>
+                            <span class="ml-auto text-xs text-gray-400">{{ session.date.strftime('%b %d, %Y') }}</span>
+                        </div>
                         {% endfor %}
                     </div>
-                {% else %}
+                    {% else %}
                     <p class="text-sm text-gray-500">No upcoming sessions scheduled.</p>
-                {% endif %}
+                    {% endif %}
+                </div>
             </div>
-        </div>
-
-    </main>
-
-    {% include 'footer.html' %}
-
-
-<!-- Toast/notification script -->
-<script src="{{ url_for('static', filename='js/toast.js') }}"></script>
-
-
-<!-- assesssment drop down -->
-<script>
-    const toggleBtn = document.getElementById("toggleAllBtn");
-    const allAssessments = document.getElementById("allAssessments");
-
-    toggleBtn.addEventListener("click", () => {
-        const isHidden = allAssessments.classList.contains("hidden");
-        allAssessments.classList.toggle("hidden");
-        toggleBtn.textContent = isHidden ? "Hide assessments ↑" : "See all assessments ↓";
-    });
-</script>
-
-
-</body>
+        </main>
+        {% include 'footer.html' %}
+        <!-- Toast/notification script -->
+        <script src="{{ url_for('static', filename='js/toast.js') }}"></script>
+        <!-- assesssment drop down -->
+        <script>
+            const toggleBtn = document.getElementById("toggleAllBtn");
+            const allAssessments = document.getElementById("allAssessments");
+            
+            toggleBtn.addEventListener("click", () => {
+                const isHidden = allAssessments.classList.contains("hidden");
+                allAssessments.classList.toggle("hidden");
+                toggleBtn.textContent = isHidden ? "Hide assessments ↑" : "See all assessments ↓";
+            });
+        </script>
+    </body>
 </html>
