@@ -20,6 +20,7 @@ class Assessment(db.Model):
     title = db.Column(db.String(100), nullable = False)
     description = db.Column(db.Text, nullable = True)
     due_date = db.Column(db.DateTime, nullable = False)
+    weighting = db.Column(db.Integer, nullable=True)
 
 class StudySession(db.Model):
     id = db.Column(db.Integer, primary_key=True)

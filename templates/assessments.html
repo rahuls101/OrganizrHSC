@@ -24,7 +24,6 @@
             class="hidden fixed top-5 left-1/2 transform -translate-x-1/2 z-50 max-w-md w-full px-6 py-4 rounded-xl shadow-lg border text-center transition-opacity duration-500">
             <span id="toast-text" class="text-base font-semibold block"></span>
         </div>
-
         <!-- Navbar -->
         <nav class="bg-white border-gray-200 border-b shadow-sm px-4 lg:px-6 py-2.5">
             <div class="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl">
@@ -85,20 +84,32 @@
                                             <p class="text-sm text-gray-600">{{ a.subject }}</p>
                                         </div>
                                     </div>
-
                                     {% set urgency_bg, urgency_text = 
-                                        ('red-100', 'red-800') if a.days_until_due <= 3 else
-                                        ('yellow-100', 'yellow-800') if a.days_until_due <= 7 else
-                                        ('gray-100', 'gray-800')
+                                    ('red-100', 'red-800') if a.days_until_due <= 3 else
+                                    ('yellow-100', 'yellow-800') if a.days_until_due <= 7 else
+                                    ('gray-100', 'gray-800')
                                     %}
                                     <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-{{ urgency_bg }} text-{{ urgency_text }}">
                                     Due in {{ a.days_until_due }} days
                                     </span>
                                 </div>
-                                <div class="mb-4">
+                                <div class="mb-4 space-y-2">
                                     <p class="text-gray-700 text-sm">
                                         {{ a.description }}
                                     </p>
+                                    {% set weighting_colour = 
+                                    'red' if a.weighting >= 35 else
+                                    'yellow' if a.weighting >= 25 else
+                                    'green'
+                                    %}
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-{{ weighting_colour }}-100 text-{{ weighting_colour }}-800">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                            stroke-width="1.5" stroke="currentColor" class="w-4 h-4 mr-1">
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                d="M12 3v17.25m0 0c-1.472 0-2.882.265-4.185.75M12 20.25c1.472 0 2.882.265 4.185.75M18.75 4.97A48.416 48.416 0 0 0 12 4.5c-2.291 0-4.545.16-6.75.47m13.5 0c1.01.143 2.01.317 3 .52m-3-.52 2.62 10.726c.122.499-.106 1.028-.589 1.202a5.988 5.988 0 0 1-2.031.352 5.988 5.988 0 0 1-2.031-.352c-.483-.174-.711-.703-.59-1.202L18.75 4.971Zm-16.5.52c.99-.203 1.99-.377 3-.52m0 0 2.62 10.726c.122.499-.106 1.028-.589 1.202a5.989 5.989 0 0 1-2.031.352 5.989 5.989 0 0 1-2.031-.352c-.483-.174-.711-.703-.59-1.202L5.25 4.971Z" />
+                                        </svg>
+                                        {{ a.weighting }}% Weighting
+                                    </span>
                                 </div>
                                 <div class="flex items-center text-sm text-gray-500">
                                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -118,7 +129,7 @@
                                     Edit
                                 </button>
                                 <button onclick="showDeleteModal('{{ a.id }}')"
-                                        class="bg-red-100 hover:bg-red-200 text-red-700 border border-red-300 px-4 py-2 rounded-lg text-sm font-medium transition-colors inline-flex items-center justify-center">
+                                    class="bg-red-100 hover:bg-red-200 text-red-700 border border-red-300 px-4 py-2 rounded-lg text-sm font-medium transition-colors inline-flex items-center justify-center">
                                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
@@ -129,12 +140,10 @@
                         </div>
                     </div>
                     <!-- Edit Form (Edit Mode) -->
-                     <form id="edit-form-{{ loop.index }}-form" action="{{ url_for('edit_assessment') }}" method="POST">
+                    <form id="edit-form-{{ loop.index }}-form" action="{{ url_for('edit_assessment') }}" method="POST">
                         <div id="edit-form-{{ loop.index }}" class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hidden">
-
                             <!-- HIDDEN ID -->
                             <input type="hidden" name="assessment_id" value="{{ a.id }}">
-
                             <div class="border-t border-gray-200 pt-6">
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <div>
@@ -144,11 +153,11 @@
                                     <div>
                                         <label class="block text-sm font-medium text-gray-700">Subject</label>
                                         <select name="subject_code" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
-                                            {% for code, info in subject_data.items() %}
-                                                <option value="{{ code }}" {% if code == a.subject_code %}selected{% endif %}>
-                                                    {{ info.name }}
-                                                </option>
-                                            {% endfor %}
+                                        {% for code, info in subject_data.items() %}
+                                        <option value="{{ code }}" {% if code == a.subject_code %}selected{% endif %}>
+                                        {{ info.name }}
+                                        </option>
+                                        {% endfor %}
                                         </select>
                                     </div>
                                     <div class="md:col-span-2">
@@ -158,6 +167,10 @@
                                     <div class="md:col-span-2">
                                         <label class="block text-sm font-medium text-gray-700">Due Date</label>
                                         <input name="due_date" type="datetime-local" value="{{ a.due_date_input }}" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
+                                    </div>
+                                    <div class="md:col-span-2">
+                                        <label class="block text-sm font-medium text-gray-700">Weighting (%)</label>
+                                        <input name="weighting" type="number" min="0" max="100" value="{{ a.weighting }}" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
                                     </div>
                                 </div>
                                 <div class="mt-6 flex gap-3">
@@ -185,7 +198,6 @@
             </div>
             <!-- Add Assessment Form -->
             <form id="add-form" action="{{ url_for('add_assessment') }}" method="POST" class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mt-4 hidden">
-
                 <div class="border-t border-gray-200 pt-6">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
@@ -196,7 +208,7 @@
                             <label class="block text-sm font-medium text-gray-700">Subject</label>
                             <select name="subject_code" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" required>
                                 {% for code, info in subject_data.items() %}
-                                    <option value="{{ code }}">{{ info.name }}</option>
+                                <option value="{{ code }}">{{ info.name }}</option>
                                 {% endfor %}
                             </select>
                         </div>
@@ -208,13 +220,17 @@
                             <label class="block text-sm font-medium text-gray-700">Due Date</label>
                             <input name="due_date" type="datetime-local" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" required />
                         </div>
+                        <div class="md:col-span-2">
+                            <label class="block text-sm font-medium text-gray-700">Weighting (%)</label>
+                            <input name="weighting" type="number" min="0" max="100" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
+                        </div>
                     </div>
                     <div class="mt-6 flex gap-3">
                         <button type="submit" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm font-medium">
-                            Add Assessment
+                        Add Assessment
                         </button>
                         <button type="button" onclick="hideAddForm()" class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-lg text-sm font-medium">
-                            Cancel
+                        Cancel
                         </button>
                     </div>
                 </div>
@@ -240,31 +256,28 @@
             </div>
         </main>
         {% include 'footer.html' %}
-
         <!-- Delete Confirmation Modal (copied from tailwindcss.com) -->
         <div id="deleteModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 hidden">
-        <div class="bg-white rounded-lg p-6 shadow-lg max-w-md w-full">
-            <div class="flex items-center space-x-4">
-            <svg class="w-6 h-6 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-            </svg>
-            <div>
-                <h3 class="text-lg font-semibold text-gray-900">Delete assessment</h3>
-                <p class="text-sm text-gray-600">Are you sure you want to delete this assessment? This action cannot be undone.</p>
-            </div>
-            </div>
-            <div class="mt-6 flex justify-end gap-3">
-            <button onclick="hideDeleteModal()" class="bg-gray-100 text-gray-800 px-4 py-2 rounded-md hover:bg-gray-200">Cancel</button>
-            <form id="deleteForm" method="POST" action="{{ url_for('delete_assessment') }}">
-                <input type="hidden" name="assessment_id" id="deleteAssessmentId">
-                <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700">Delete</button>
-            </form>
+            <div class="bg-white rounded-lg p-6 shadow-lg max-w-md w-full">
+                <div class="flex items-center space-x-4">
+                    <svg class="w-6 h-6 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-900">Delete assessment</h3>
+                        <p class="text-sm text-gray-600">Are you sure you want to delete this assessment? This action cannot be undone.</p>
+                    </div>
+                </div>
+                <div class="mt-6 flex justify-end gap-3">
+                    <button onclick="hideDeleteModal()" class="bg-gray-100 text-gray-800 px-4 py-2 rounded-md hover:bg-gray-200">Cancel</button>
+                    <form id="deleteForm" method="POST" action="{{ url_for('delete_assessment') }}">
+                        <input type="hidden" name="assessment_id" id="deleteAssessmentId">
+                        <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700">Delete</button>
+                    </form>
+                </div>
             </div>
         </div>
-        </div>
-
-
         <script>
             function toggleEditMode(id) {
                 const view = document.getElementById(`assessment-view-${id}`);
@@ -279,39 +292,37 @@
                 const view = document.getElementById(`assessment-view-${id}`);
                 const form = document.getElementById(`edit-form-${id}`);
                 const formEl = document.getElementById(`edit-form-${id}-form`);
-
+            
                 if (formEl) {
                     formEl.reset();  // Reset all fields
                 }
-
+            
                 if (view && form) {
                     form.classList.add("hidden");
                     view.classList.remove("hidden");
                 }
             }
-
+            
             function showDeleteModal(assessmentId) {
                 document.getElementById('deleteAssessmentId').value = assessmentId;
                 document.getElementById('deleteModal').classList.remove('hidden');
             }
-
+            
             function hideDeleteModal() {
                 document.getElementById('deleteModal').classList.add('hidden');
             }
-
+            
             function showAddForm() {
                 document.getElementById('add-form').classList.remove('hidden');
                 window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
             }
-
+            
             function hideAddForm() {
                 document.getElementById('add-form').classList.add('hidden');
             }
             
         </script>
-
         <!-- Toast/notification script -->
         <script src="{{ url_for('static', filename='js/toast.js') }}"></script>
-        
     </body>
 </html>

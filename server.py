@@ -224,7 +224,8 @@ def commit_assessments():
                 subject_code=info['subject_code'],
                 title=info['title'],
                 description=info['description'],
-                due_date=datetime.fromisoformat(info['due_date'])
+                due_date=datetime.fromisoformat(info['due_date']),
+                weighting = info.get('weighting')
             )
             db.session.add(new_assessment)
             committed += 1
@@ -412,7 +413,8 @@ def assessments():
                 "description": assessment.description,
                 "days_until_due": days_until_due,
                 "due_date_str": due_date_str,
-                "due_date_input": due_date_input
+                "due_date_input": due_date_input,
+                "weighting": assessment.weighting
             }
 
             formatted_assessments.append(assessment_entry)
@@ -434,6 +436,8 @@ def edit_assessment():
     subject_code = request.form.get('subject_code')
     description = request.form.get('description')
     due_date_str = request.form.get('due_date')
+    weighting = request.form.get('weighting', type=int)
+
 
     #parse due date 
     try:
@@ -448,22 +452,26 @@ def edit_assessment():
     if assessment and assessment.user_id == session['user_id']:
 
         due_date_changed = (assessment.due_date != due_date)
+        weighting_changed = (assessment.weighting != weighting)
+
 
         assessment.title = title
         assessment.subject_code = subject_code
         assessment.description = description
         assessment.due_date = due_date
+        assessment.weighting = weighting
+
 
         db.session.commit()
 
-        if due_date_changed: 
+        if due_date_changed or weighting_changed: 
             StudySession.query.filter_by(assessment_id=assessment.id).delete() 
             db.session.commit()
 
             #regenerate study sessions 
             generate_schedule_for_new_assessments(assessment.user_id)
 
-            return redirect(url_for('assessments', message='Due date changed - sessions regenerated.', type='success'))
+            return redirect(url_for('assessments', message='Due date or weighting changed - sessions regenerated.', type='success'))
 
         return redirect(url_for('assessments', message='Assessment updated successfully', type='success'))
     else:
@@ -499,6 +507,8 @@ def add_assessment():
     subject_code = request.form.get('subject_code')
     description = request.form.get('description')
     due_date_str = request.form.get('due_date')
+    weighting = request.form.get('weighting', type=int)
+
 
     try:
         due_date = datetime.strptime(due_date_str, "%Y-%m-%dT%H:%M")
@@ -510,7 +520,8 @@ def add_assessment():
         title=title,
         subject_code=subject_code,
         description=description,
-        due_date=due_date
+        due_date=due_date,
+        weighting=weighting
     )
 
     db.session.add(new_assessment)
