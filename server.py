@@ -447,7 +447,27 @@ def edit_assessment():
         return redirect(url_for('assessments', message='Assessment updated successfully', type='success'))
     else:
         return redirect(url_for('assessments', message='Assessment not found', type='error'))
+    
 
+@app.route('/delete-assessment', methods=['POST'])
+def delete_assessment():
+    if 'user_id' not in session:
+        return redirect(url_for('login', message='Please log in to continue', type='error'))
+
+    assessment_id = request.form.get('assessment_id')
+    assessment = Assessment.query.get(assessment_id)
+
+    if assessment and assessment.user_id == session['user_id']:
+        # Delete related study sessions first
+        StudySession.query.filter_by(assessment_id=assessment.id).delete()
+
+        # Then delete the assessment
+        db.session.delete(assessment)
+        db.session.commit()
+
+        return redirect(url_for('assessments', message='Assessment and study sessions deleted.', type='success'))
+    
+    return redirect(url_for('assessments', message='Assessment not found or unauthorized.', type='error'))
 
 if __name__ == '__main__': 
     app.run(debug=True)
