@@ -15,6 +15,7 @@ from subject_config import subject_data, name_to_code
 from ics import Calendar, Event
 import pytz
 from flask_wtf import CSRFProtect
+from functools import wraps
 
 
 
@@ -34,6 +35,16 @@ if not os.path.exists(UPLOAD_FOLDER):
 
 
 db.init_app(app)
+
+
+
+def login_required(route_function):
+    @wraps(route_function)
+    def wrapper(*args, **kwargs):
+        if 'user_id' not in session:
+            return redirect(url_for('login', message='Please log in to continue', type='error'))
+        return route_function(*args, **kwargs)
+    return wrapper
 
 
 @app.context_processor
@@ -97,9 +108,8 @@ def logout():
 
 
 @app.route('/dashboard')
+@login_required
 def dashboard():
-    if 'user_id' not in session: 
-        return redirect(url_for('login', message='Please log in to continue', type='error'))
 
     user = User.query.get(session['user_id'])
 
@@ -155,9 +165,8 @@ def dashboard():
 
 
 @app.route('/upload', methods=['GET', 'POST'])
+@login_required
 def upload():
-    if 'user_id' not in session:
-        return redirect(url_for('login', message='Please log in to continue', type='error'))
 
     user = User.query.get(session['user_id'])
 
@@ -191,10 +200,9 @@ def upload():
     return render_template('upload.html', user=user)
 
 @app.route('/commit-assessments', methods=['POST'])
+@login_required
 def commit_assessments():
-    if 'user_id' not in session:
-        return jsonify(False), 401
-    
+
     user_id = session['user_id']
     data = request.get_json()
     filenames = data.get('filenames', [])
@@ -244,6 +252,7 @@ def commit_assessments():
 
 
 @app.route('/clear-parsed', methods=['POST'])
+@login_required
 def clear_parsed(): 
     if 'parsed_assessments' in session: 
         session.pop('parsed_assessments')
@@ -253,10 +262,9 @@ def clear_parsed():
 
 
 @app.route('/schedule')
+@login_required
 def schedule():
-    if 'user_id' not in session: 
-        return redirect(url_for('login', message='Please log in to continue', type='error'))
-    
+  
     user = User.query.get(session['user_id'])
 
 
@@ -308,10 +316,9 @@ def check_email():
     return jsonify({'exists': exists})
 
 @app.route('/export-calendar')
+@login_required
 def export_calendar(): 
-    if 'user_id' not in session: 
-        return redirect(url_for('login', message='Please log in to continue', type='error'))
-    
+
     user = User.query.get(session['user_id'])
 
     # get all sessions for the user 
@@ -357,11 +364,9 @@ def export_calendar():
     response.headers['Content-Type'] = 'text/calendar'
     return response
 
-
 @app.route('/assessments')
+@login_required
 def assessments(): 
-    if 'user_id' not in session:
-        return redirect(url_for('login', message='Please log in to continue', type='error'))
 
     user = User.query.get(session['user_id'])
     now = datetime.now()
@@ -427,9 +432,8 @@ def assessments():
     return render_template('assessments.html', assessments=formatted_assessments, subject_data=subject_data, assessments_summary = assessments_summary)
 
 @app.route('/edit-assessment', methods=['POST'])
+@login_required
 def edit_assessment(): 
-    if 'user_id' not in session: 
-        return redirect(url_for('login', message='Please log in to continue', type='error'))
     
     # get data from form 
 
@@ -481,9 +485,8 @@ def edit_assessment():
     
 
 @app.route('/delete-assessment', methods=['POST'])
+@login_required
 def delete_assessment():
-    if 'user_id' not in session:
-        return redirect(url_for('login', message='Please log in to continue', type='error'))
 
     assessment_id = request.form.get('assessment_id')
     assessment = Assessment.query.get(assessment_id)
@@ -501,9 +504,8 @@ def delete_assessment():
     return redirect(url_for('assessments', message='Assessment not found or unauthorized.', type='error'))
 
 @app.route('/add-assessment', methods=['POST'])
+@login_required
 def add_assessment():
-    if 'user_id' not in session:
-        return redirect(url_for('login', message='Please log in to continue', type='error'))
 
     title = escape(request.form.get('title'))
     subject_code = escape(request.form.get('subject_code'))
