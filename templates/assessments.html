@@ -19,6 +19,12 @@
         </script>
     </head>
     <body class="bg-gray-50 min-h-screen">
+        <!-- Toast notification -->
+        <div id="toast-message"
+            class="hidden fixed top-5 left-1/2 transform -translate-x-1/2 z-50 max-w-md w-full px-6 py-4 rounded-xl shadow-lg border text-center transition-opacity duration-500">
+            <span id="toast-text" class="text-base font-semibold block"></span>
+        </div>
+
         <!-- Navbar -->
         <nav class="bg-white border-gray-200 border-b shadow-sm px-4 lg:px-6 py-2.5">
             <div class="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl">
@@ -63,28 +69,35 @@
             </div>
             <!-- Assessments List -->
             <div class="space-y-4">
+                {% for a in assessments %}
                 <div class="assessment-block">
                     <!-- Assessment Card (View Mode) -->
-                    <div id="assessment-view-placeholder" class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                    <div id="assessment-view-{{ loop.index }}" class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
                         <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between">
                             <div class="flex-1">
                                 <div class="flex items-start justify-between mb-4">
                                     <div class="flex items-center">
-                                        <div class="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center mr-4">
-                                            <span class="text-red-600 font-semibold text-sm">MAT</span>
+                                        <div class="w-12 h-12 bg-{{ a.subject_colour }}-100 rounded-lg flex items-center justify-center mr-4">
+                                            <span class="text-{{ a.subject_colour }}-600 font-semibold text-sm">{{ a.subject_code }}</span>
                                         </div>
                                         <div>
-                                            <h3 class="text-lg font-semibold text-gray-900">Calculus Final Exam</h3>
-                                            <p class="text-sm text-gray-600">Mathematics</p>
+                                            <h3 class="text-lg font-semibold text-gray-900">{{ a.title }}</h3>
+                                            <p class="text-sm text-gray-600">{{ a.subject }}</p>
                                         </div>
                                     </div>
-                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
-                                    Due in 2 days
+
+                                    {% set urgency_bg, urgency_text = 
+                                        ('red-100', 'red-800') if a.days_until_due <= 3 else
+                                        ('yellow-100', 'yellow-800') if a.days_until_due <= 7 else
+                                        ('gray-100', 'gray-800')
+                                    %}
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-{{ urgency_bg }} text-{{ urgency_text }}">
+                                    Due in {{ a.days_until_due }} days
                                     </span>
                                 </div>
                                 <div class="mb-4">
                                     <p class="text-gray-700 text-sm">
-                                        Comprehensive final examination covering differential and integral calculus, including applications to physics and engineering problems. Topics include limits, derivatives, integrals, and series.
+                                        {{ a.description }}
                                     </p>
                                 </div>
                                 <div class="flex items-center text-sm text-gray-500">
@@ -92,12 +105,12 @@
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                                     </svg>
-                                    Due: March 15, 2024 at 9:00 AM
+                                    Due: {{ a.due_date_str }}
                                 </div>
                             </div>
                             <div class="mt-4 lg:mt-0 lg:ml-6 flex flex-col sm:flex-row gap-2">
                                 <button class="bg-wcc-blue hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors inline-flex items-center justify-center"
-                                    onclick="toggleEditMode('placeholder')">
+                                    onclick="toggleEditMode('{{ loop.index }}')">
                                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
@@ -115,43 +128,50 @@
                         </div>
                     </div>
                     <!-- Edit Form (Edit Mode) -->
-                    <div id="edit-form-placeholder" class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hidden">
-                        <div class="border-t border-gray-200 pt-6">
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700">Title</label>
-                                    <input type="text" value="Calculus Final Exam"
-                                        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
+                     <form id="edit-form-{{ loop.index }}-form" action="{{ url_for('edit_assessment') }}" method="POST">
+                        <div id="edit-form-{{ loop.index }}" class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hidden">
+
+                            <!-- HIDDEN ID -->
+                            <input type="hidden" name="assessment_id" value="{{ a.id }}">
+
+                            <div class="border-t border-gray-200 pt-6">
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700">Title</label>
+                                        <input name="title" type="text" value="{{ a.title }}" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700">Subject</label>
+                                        <select name="subject_code" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+                                            {% for code, info in subject_data.items() %}
+                                                <option value="{{ code }}" {% if code == a.subject_code %}selected{% endif %}>
+                                                    {{ info.name }}
+                                                </option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="md:col-span-2">
+                                        <label class="block text-sm font-medium text-gray-700">Description</label>
+                                        <textarea name="description" rows="3" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm w-full">{{ a.description }}</textarea>
+                                    </div>
+                                    <div class="md:col-span-2">
+                                        <label class="block text-sm font-medium text-gray-700">Due Date</label>
+                                        <input name="due_date" type="datetime-local" value="{{ a.due_date_input }}" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
+                                    </div>
                                 </div>
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700">Subject</label>
-                                    <input type="text" value="Mathematics"
-                                        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
+                                <div class="mt-6 flex gap-3">
+                                    <button type="submit" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm font-medium">
+                                    Save Changes
+                                    </button>
+                                    <button type="button" onclick="cancelEditMode('{{ loop.index }}')" class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-lg text-sm font-medium">
+                                    Cancel
+                                    </button>
                                 </div>
-                                <div class="md:col-span-2">
-                                    <label class="block text-sm font-medium text-gray-700">Description</label>
-                                    <textarea rows="3"
-                                        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm w-full">Comprehensive final examination covering differential and integral calculus, including applications to physics and engineering problems.</textarea>
-                                </div>
-                                <div class="md:col-span-2">
-                                    <label class="block text-sm font-medium text-gray-700">Due Date</label>
-                                    <input type="datetime-local" value="2024-03-15T09:00"
-                                        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
-                                </div>
-                            </div>
-                            <div class="mt-6 flex gap-3">
-                                <button class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm font-medium">
-                                Save Changes
-                                </button>
-                                <button 
-                                    onclick="cancelEditMode('placeholder')"
-                                    class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-lg text-sm font-medium">
-                                Cancel
-                                </button>
                             </div>
                         </div>
-                    </div>
+                    </form>
                 </div>
+                {% endfor %}
             </div>
             <!-- Add New Assessment Button -->
             <div class="mt-8 text-center">
@@ -196,6 +216,12 @@
             function cancelEditMode(id) {
                 const view = document.getElementById(`assessment-view-${id}`);
                 const form = document.getElementById(`edit-form-${id}`);
+                const formEl = document.getElementById(`edit-form-${id}-form`);
+
+                if (formEl) {
+                    formEl.reset();  // Reset all fields
+                }
+
                 if (view && form) {
                     form.classList.add("hidden");
                     view.classList.remove("hidden");
@@ -203,5 +229,9 @@
             }
             
         </script>
+
+        <!-- Toast/notification script -->
+        <script src="{{ url_for('static', filename='js/toast.js') }}"></script>
+        
     </body>
 </html>

@@ -11,7 +11,7 @@ from werkzeug.utils import secure_filename
 from schedule_generator import generate_schedule_for_new_assessments
 from collections import defaultdict
 from schedule_stats import calculate_weekly_stats
-from subject_config import subject_data
+from subject_config import subject_data, name_to_code
 from ics import Calendar, Event
 import pytz
 
@@ -357,7 +357,65 @@ def export_calendar():
 
 @app.route('/assessments')
 def assessments(): 
-    return render_template('assessments.html')
+    if 'user_id' not in session:
+        return redirect(url_for('login', message='Please log in to continue', type='error'))
+
+    user = User.query.get(session['user_id'])
+    now = datetime.now()
+
+    assessments = [
+        {
+            "id": a.id,
+            "subject_code": a.subject_code,
+            "title": a.title,
+            "subject": subject_data.get(a.subject_code, {}).get("name", a.subject_code),
+            "subject_colour": subject_data.get(a.subject_code, {}).get("colour", "gray"),
+            "description": a.description,
+            "days_until_due": max((a.due_date - now).days, 0),
+            "due_date_str": a.due_date.strftime("%B %d, %Y at %I:%M %p"),
+            "due_date_input": a.due_date.strftime("%Y-%m-%dT%H:%M")
+        }
+        for a in sorted(user.assessments, key=lambda x: x.due_date)
+        if a.due_date >= now
+    ]
+
+    return render_template('assessments.html', assessments=assessments, subject_data=subject_data)
+
+
+@app.route('/edit-assessment', methods=['POST'])
+def edit_assessment(): 
+    if 'user_id' not in session: 
+        return redirect(url_for('login', message='Please log in to continue', type='error'))
+    
+    # get data from form 
+
+    assessment_id = request.form.get('assessment_id')
+    title = request.form.get('title')
+    subject_code = request.form.get('subject_code')
+    description = request.form.get('description')
+    due_date_str = request.form.get('due_date')
+
+    #parse due date 
+    try:
+        due_date = datetime.strptime(due_date_str, "%Y-%m-%dT%H:%M")
+    except ValueError:
+        return redirect(url_for('assessments', message='Please enter a correct date', type='error'))
+    
+    # find assessment 
+
+    assessment = Assessment.query.get(assessment_id)
+
+    if assessment and assessment.user_id == session['user_id']:
+        assessment.title = title
+        assessment.subject_code = subject_code
+        assessment.description = description
+        assessment.due_date = due_date
+
+        db.session.commit()
+        return redirect(url_for('assessments', message='Assessment updated successfully', type='success'))
+    else:
+        return redirect(url_for('assessments', message='Assessment not found or unauthorized', type='error'))
+
 
 if __name__ == '__main__': 
     app.run(debug=True)
