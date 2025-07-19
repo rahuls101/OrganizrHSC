@@ -507,11 +507,11 @@ def delete_assessment():
 @login_required
 def add_assessment():
 
-    title = escape(request.form.get('title'))
-    subject_code = escape(request.form.get('subject_code'))
-    description = escape(request.form.get('description'))
-    due_date_str = escape(request.form.get('due_date'))
-    weighting = escape(request.form.get('weighting', type=int))
+    title = request.form.get('title')
+    subject_code = request.form.get('subject_code')
+    description = request.form.get('description')
+    due_date_str = request.form.get('due_date')
+    weighting = request.form.get('weighting', type=int)
 
 
     try:
