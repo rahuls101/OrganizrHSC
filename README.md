@@ -13,7 +13,7 @@ OrganizrHSC is a smart, dynamic Flask web application designed to help high scho
 - [📸 Screenshots](#-screenshots)
 - [⚙️ Tech Stack](#️-tech-stack)
 - [📋 Prerequisites](#️-prerequisites)
-- [🚀 Getting Started](#-getting-started)
+- [🚀 Running The App](#-running-the-app)
 - [🧪 Running Locally](#-running-locally)
 - [🗃️ File Structure Overview](#️-file-structure-overview)
 - [📤 Upload & Parsing Process](#-upload--parsing-process)
@@ -109,7 +109,20 @@ Make sure you have the following installed on your system:
 
 ---
 
-## 🚀 Getting Started
+## 🚀 Running The App
+
+
+
+You can try **OrganizrHSC** instantly — no installation required:
+
+👉 [organizrhsc.onrender.com](https://organizrhsc.onrender.com)
+
+Create an account, upload assessment PDFs, and explore the full dashboard.
+
+
+---
+
+## 🧪 Running Locally
 
 ### 1. Clone the Repository
 
@@ -125,7 +138,7 @@ cd OrganizrHSC
 pip install -r requirements.txt
 ```
 
-### 4. Set Up Environment Variables
+### 3. Set Up Environment Variables
 
 Create a `.env` file in the root directory:
 
@@ -139,9 +152,6 @@ You can generate a key with:
 import secrets; print(secrets.token_hex())
 ```
 
----
-
-## 🧪 Running Locally
 
 Once everything is installed:
 
@@ -212,7 +222,7 @@ OrganizrHSC/
 
 | Variable     | Description                     |
 | ------------ | ------------------------------- |
-| `SECRET_KEY` | Flask app secret key (required) |
+| `ADMIN_SECRET` | Flask app secret key |
 
 > Put this inside a `.env` file in your root directory. This file is **ignored by Git**.
 
