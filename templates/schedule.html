@@ -27,9 +27,11 @@
         <!-- Navbar -->
         <nav class="bg-white border-gray-200 border-b shadow-sm px-4 lg:px-6 py-2.5">
             <div class="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl">
-                <h1 class="flex items-center">
-                    <span class="text-xl font-bold text-wcc-blue">OrganizrHSC</span>
-                </h1>
+                <a href="{{ url_for('dashboard') }}" class="block">
+                    <h1 class="flex items-center">
+                        <span class="text-xl font-bold text-wcc-blue">OrganizrHSC</span>
+                    </h1>
+                </a>
                 <div class="justify-between items-center w-full lg:flex lg:w-auto lg:order-1">
                     <div class="flex flex-col mt-4 font-medium lg:flex-row lg:space-x-8 lg:mt-0">
                         <a href="{{ url_for('dashboard') }}" class="px-4 py-2 text-wcc-blue font-semibold rounded-lg transition-all duration-200 hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 hover:shadow-md transform hover:-translate-y-0.5 relative overflow-hidden group">

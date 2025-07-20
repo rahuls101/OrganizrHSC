@@ -12,6 +12,31 @@ document.addEventListener('DOMContentLoaded', function() {
     const errorBanner = document.getElementById('upload-error-banner');
 
     // ─────────────────────────────────────────────
+    // Drag and Drop Upload Support
+    // ─────────────────────────────────────────────
+    const dropZone = document.querySelector('.border-dashed');
+
+    dropZone.addEventListener('dragover', e => {
+        e.preventDefault();
+        dropZone.classList.add('border-wcc-blue', 'bg-blue-50');
+    });
+
+    dropZone.addEventListener('dragleave', () => {
+        dropZone.classList.remove('border-wcc-blue', 'bg-blue-50');
+    });
+
+    dropZone.addEventListener('drop', e => {
+        e.preventDefault();
+        dropZone.classList.remove('border-wcc-blue', 'bg-blue-50');
+
+        const dt = e.dataTransfer;
+        if (dt && dt.files && dt.files.length) {
+            fileInput.files = dt.files;
+            fileInput.dispatchEvent(new Event('change'));
+        }
+    });
+
+    // ─────────────────────────────────────────────
     // State
     // ─────────────────────────────────────────────
     let selectedFiles = [];
