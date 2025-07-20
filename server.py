@@ -537,10 +537,6 @@ def add_assessment():
     return redirect(url_for('assessments', message='Assessment added successfully', type='success'))
 
 
-@app.route('/init-db')
-def init_db(): 
-    db.create_all()
-    return 'database initialised' #temporary 
 
 if __name__ == '__main__': 
     port = int(os.environ.get("PORT", 5000))
