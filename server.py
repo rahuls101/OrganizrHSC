@@ -36,6 +36,11 @@ if not os.path.exists(UPLOAD_FOLDER):
 
 db.init_app(app)
 
+with app.app_context(): 
+    if not os.path.exists('database.db'):
+        print("Database not found, creating one instead") #due to renders stupid spin down feature 
+        db.create_all() #creates an empty database - yes, not ideal, but its a fix at least
+
 
 
 def login_required(route_function):
