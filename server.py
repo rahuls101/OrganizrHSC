@@ -536,7 +536,16 @@ def add_assessment():
 
     return redirect(url_for('assessments', message='Assessment added successfully', type='success'))
 
+@app.route('/init-db')
+def init_db():
+    provided_key = request.args.get('key')
+    expected_key = os.getenv("ADMIN_SECRET", "devmode")
 
+    if provided_key != expected_key:
+        return "Unauthorized", 403
+
+    db.create_all()
+    return 'Database initialized!'
 
 if __name__ == '__main__': 
     port = int(os.environ.get("PORT", 5000))
