@@ -317,13 +317,9 @@ def export_calendar():
         subject_name = subject_info.get('name', subject_code)
         
         from_zone = pytz.timezone("Australia/Sydney")
-        to_zone = pytz.utc
 
-        # Treat session time as AEST 
-        local_dt = from_zone.localize(datetime.combine(session_obj.date, time(hour=session_obj.time)))
-
-        # Convert to UTC for the ICS file 
-        start_dt = local_dt.astimezone(to_zone)
+        # Localise the session time and KEEP it in AEST
+        start_dt = from_zone.localize(datetime.combine(session_obj.date, time(hour=session_obj.time)))
         end_dt = start_dt + timedelta(hours=2)
 
         event = Event()
