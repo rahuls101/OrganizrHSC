@@ -1,30 +1,34 @@
 document.addEventListener('DOMContentLoaded', function() {
+    // Get CSRF token from meta tag for secure POST requests
     const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
     // ─────────────────────────────────────────────
     // DOM Elements
     // ─────────────────────────────────────────────
-    const fileInput = document.getElementById('file-upload');
-    const previewContainer = document.querySelector('#file-preview-container');
-    const clearAllBtn = document.getElementById('clear-all-btn');
-    const createBtn = document.getElementById('create-assessments-btn');
-    const successBanner = document.getElementById('upload-success-banner');
-    const errorBanner = document.getElementById('upload-error-banner');
+    const fileInput = document.getElementById('file-upload'); // File input element
+    const previewContainer = document.querySelector('#file-preview-container'); // Container for file previews
+    const clearAllBtn = document.getElementById('clear-all-btn'); // Button to clear all files
+    const createBtn = document.getElementById('create-assessments-btn'); // Button to create assessments
+    const successBanner = document.getElementById('upload-success-banner'); // Success banner element
+    const errorBanner = document.getElementById('upload-error-banner'); // Error banner element
 
     // ─────────────────────────────────────────────
     // Drag and Drop Upload Support
     // ─────────────────────────────────────────────
-    const dropZone = document.querySelector('.border-dashed');
+    const dropZone = document.querySelector('.border-dashed'); // Drop zone for drag-and-drop
 
+    // Highlight drop zone on dragover
     dropZone.addEventListener('dragover', e => {
         e.preventDefault();
         dropZone.classList.add('border-wcc-blue', 'bg-blue-50');
     });
 
+    // Remove highlight on dragleave
     dropZone.addEventListener('dragleave', () => {
         dropZone.classList.remove('border-wcc-blue', 'bg-blue-50');
     });
 
+    // Handle file drop
     dropZone.addEventListener('drop', e => {
         e.preventDefault();
         dropZone.classList.remove('border-wcc-blue', 'bg-blue-50');
@@ -39,7 +43,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // ─────────────────────────────────────────────
     // State
     // ─────────────────────────────────────────────
-    let selectedFiles = [];
+    let selectedFiles = []; // Array to keep track of selected files
 
     // ─────────────────────────────────────────────
     // File Input Change Handler
@@ -49,12 +53,14 @@ document.addEventListener('DOMContentLoaded', function() {
         const newFiles = [];
 
         for (const file of fileInput.files) {
+            // Only allow PDF files
             if (file.type !== 'application/pdf') {
                 const ext = file.name.slice(file.name.lastIndexOf('.')).toLowerCase();
                 showFileError(`'${ext}' is not a supported file type.`);
                 continue;
             }
 
+            // Prevent duplicate files
             if (selectedFiles.some(f => f.name === file.name && f.size === file.size)) continue;
 
             selectedFiles.push(file);
@@ -64,6 +70,7 @@ document.addEventListener('DOMContentLoaded', function() {
             addedPDF = true;
         }
 
+        // Remove empty state and upload new files if any PDFs were added
         if (addedPDF) {
             const emptyState = previewContainer.querySelector('.text-center');
             if (emptyState) emptyState.remove();
@@ -79,6 +86,7 @@ document.addEventListener('DOMContentLoaded', function() {
         showEmptyState();
         updateCreateButtonState();
 
+        // Notify backend to clear parsed assessments from session
         fetch('/clear-parsed', {
                 method: 'POST',
                 headers: {
@@ -95,14 +103,17 @@ document.addEventListener('DOMContentLoaded', function() {
     // Create Assessments Button
     // ─────────────────────────────────────────────
     createBtn.addEventListener('click', () => {
+        // Collect filenames of processed files
         const processedFilenames = Array.from(document.querySelectorAll('[data-status="processed"]'))
             .map(el => el.dataset.filename);
 
+        // Show error if no files are processed
         if (processedFilenames.length === 0) {
             showBanner(errorBanner);
             return;
         }
 
+        // Commit assessments to backend
         fetch('/commit-assessments', {
                 method: 'POST',
                 headers: {
@@ -126,6 +137,7 @@ document.addEventListener('DOMContentLoaded', function() {
             .catch(() => showBanner(errorBanner));
     });
 
+    // Enable or disable the create button based on processed files
     function updateCreateButtonState() {
         const processedCount = document.querySelectorAll('[data-status="processed"]').length;
         if (processedCount > 0) {
@@ -146,6 +158,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const formData = new FormData();
         for (const file of files) formData.append('file', file);
 
+        // Send files to backend for processing
         fetch('/upload', {
                 method: 'POST',
                 headers: {
@@ -184,10 +197,12 @@ document.addEventListener('DOMContentLoaded', function() {
     // Create Preview Element
     // ─────────────────────────────────────────────
     function createPreviewElement(file) {
+        // Create a container for the file preview
         const container = document.createElement('div');
         container.className = 'flex items-center justify-between p-4 bg-gray-50 rounded-lg border border-gray-200';
         container.dataset.filename = file.name;
 
+        // Set inner HTML for file preview (icon, name, size, status, delete button)
         container.innerHTML = `
             <div class="flex items-center">
                 <div class="flex-shrink-0">
@@ -216,6 +231,7 @@ document.addEventListener('DOMContentLoaded', function() {
             </div>
         `;
 
+        // Handle delete button click
         const deleteBtn = container.querySelector('.delete-btn');
         deleteBtn.addEventListener('click', () => {
             container.remove();
@@ -232,11 +248,14 @@ document.addEventListener('DOMContentLoaded', function() {
     // ─────────────────────────────────────────────
     // UI Helper Functions
     // ─────────────────────────────────────────────
+
+    // Update the status badge for a file preview
     function updateStatus(previewElement, status) {
         const badge = previewElement.querySelector('.status-pill');
         const text = badge.querySelector('.status-text');
         const icon = badge.querySelector('.status-icon');
 
+        // Status configuration for different states
         const config = {
             success: {
                 classes: 'bg-green-100 text-green-800',
@@ -260,6 +279,7 @@ document.addEventListener('DOMContentLoaded', function() {
         text.textContent = config[status].text;
     }
 
+    // Show the empty state in the preview container
     function showEmptyState() {
         previewContainer.innerHTML = `
             <div class="text-center py-8 text-gray-500">
@@ -271,6 +291,7 @@ document.addEventListener('DOMContentLoaded', function() {
         `;
     }
 
+    // Show a banner (success or error) for a few seconds
     function showBanner(bannerElement) {
         [successBanner, errorBanner].forEach(b => b.classList.add('hidden'));
         bannerElement.classList.remove('hidden');
@@ -279,6 +300,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 6000);
     }
 
+    // Show a file error message for unsupported file types
     function showFileError(message) {
         const banner = document.getElementById('file-error-banner');
         banner.textContent = message;

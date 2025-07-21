@@ -1,7 +1,10 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content'); // ← ADD THIS LINE FIRST
+    // Get CSRF token from meta tag for secure POST requests
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
-    // Elements
+    // ─────────────────────────────────────────────
+    // DOM Elements
+    // ─────────────────────────────────────────────
     const firstName = document.getElementById("first-name");
     const lastName = document.getElementById("last-name");
     const email = document.getElementById("email");
@@ -10,7 +13,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const terms = document.getElementById("terms");
     const submitButton = document.getElementById("submit-button");
 
-    // Error elements
+    // Error elements for displaying validation messages
     const errors = {
         "first-name": document.getElementById("first-name-error"),
         "last-name": document.getElementById("last-name-error"),
@@ -20,7 +23,7 @@ document.addEventListener("DOMContentLoaded", () => {
         "terms": document.getElementById("terms-error")
     };
 
-    // Validation state
+    // Validation state for each field
     const valid = {
         "first-name": false,
         "last-name": false,
@@ -30,25 +33,30 @@ document.addEventListener("DOMContentLoaded", () => {
         "terms": false
     };
 
+    // Show error message for a field
     function showError(input, errorEl, msg) {
         input.classList.add("border-red-500", "focus:ring-red-500", "focus:border-red-500");
         errorEl.innerHTML = msg;
         errorEl.classList.remove("hidden");
     }
 
+    // Hide error message for a field
     function hideError(input, errorEl) {
         input.classList.remove("border-red-500", "focus:ring-red-500", "focus:border-red-500");
         errorEl.classList.add("hidden");
     }
 
+    // Validate name characters (letters and hyphens, up to 25 chars)
     function hasValidNameCharacters(name) {
         return /^[A-Za-z-]{1,25}$/.test(name);
     }
 
+    // Basic email format validation
     function isValidEmail(email) {
         return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
     }
 
+    // Validate password strength and return error messages
     function validatePassword(pwd) {
         const errors = [];
         if (pwd.length < 8) errors.push("at least 8 characters");
@@ -58,12 +66,13 @@ document.addEventListener("DOMContentLoaded", () => {
         return errors;
     }
 
+    // Enable or disable the submit button based on validation state
     function updateSubmitState() {
         const allValid = Object.values(valid).every(Boolean);
         submitButton.disabled = !allValid;
     }
 
-    // Debounce helper
+    // Debounce helper to limit how often a function runs
     function debounce(func, delay) {
         let timeout;
         return (...args) => {
@@ -74,8 +83,9 @@ document.addEventListener("DOMContentLoaded", () => {
         };
     }
 
+    // First name validation on input
     firstName.addEventListener("input", () => {
-        const value = firstName.value
+        const value = firstName.value;
 
         if (value.length > 25) {
             showError(firstName, errors["first-name"], "Must be 25 characters or fewer");
@@ -91,8 +101,9 @@ document.addEventListener("DOMContentLoaded", () => {
         updateSubmitState();
     });
 
+    // Last name validation on input
     lastName.addEventListener("input", () => {
-        const value = lastName.value
+        const value = lastName.value;
 
         if (value.length > 25) {
             showError(lastName, errors["last-name"], "Must be 25 characters or fewer");
@@ -107,14 +118,13 @@ document.addEventListener("DOMContentLoaded", () => {
         updateSubmitState();
     });
 
-
-    // Debounced backend check
+    // Debounced backend check for email uniqueness
     const debouncedCheckEmailBackend = debounce((emailValue) => {
         fetch("/check_email", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    "X-CSRFToken": csrfToken  
+                    "X-CSRFToken": csrfToken
                 },
                 body: JSON.stringify({
                     email: emailValue
@@ -133,12 +143,12 @@ document.addEventListener("DOMContentLoaded", () => {
             });
     }, 500);
 
-    // Listener that always runs
+    // Email validation and backend check on input
     email.addEventListener("input", () => {
         const emailValue = email.value;
 
         if (!isValidEmail(emailValue)) {
-            // ran on every keystroke
+            // Show error for invalid format
             showError(email, errors["email"], "Please enter a valid email address (yourname@domain.com)");
             valid["email"] = false;
             updateSubmitState();
@@ -146,11 +156,12 @@ document.addEventListener("DOMContentLoaded", () => {
             // Hide invalid format message immediately
             hideError(email, errors["email"]);
 
-            // backend check, but debounced
+            // Check with backend for uniqueness (debounced)
             debouncedCheckEmailBackend(emailValue);
         }
     });
 
+    // Password validation on input
     password.addEventListener("input", () => {
         const pwdErrors = validatePassword(password.value);
         if (pwdErrors.length === 0) {
@@ -175,6 +186,7 @@ document.addEventListener("DOMContentLoaded", () => {
         updateSubmitState();
     });
 
+    // Confirm password validation on input
     confirmPassword.addEventListener("input", () => {
         if (confirmPassword.value === password.value) {
             hideError(confirmPassword, errors["confirm-password"]);
@@ -186,6 +198,7 @@ document.addEventListener("DOMContentLoaded", () => {
         updateSubmitState();
     });
 
+    // Terms and conditions checkbox validation
     terms.addEventListener("change", () => {
         if (terms.checked) {
             terms.classList.remove("border-red-500", "ring-red-500", "focus:ring-red-500");
@@ -199,7 +212,7 @@ document.addEventListener("DOMContentLoaded", () => {
         updateSubmitState();
     });
 
-    // Toggle password visibility
+    // Toggle password visibility when eye icon is clicked
     const eyeIcon = document.getElementById("eye-icon");
     if (eyeIcon) {
         eyeIcon.addEventListener("click", () => {
